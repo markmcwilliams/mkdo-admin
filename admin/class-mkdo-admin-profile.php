@@ -1,0 +1,183 @@
+<?php
+/**
+ * Adds additional fields to profile page
+ *
+ * @link       http://makedo.in
+ * @since      1.0.0
+ *
+ * @package    MKDO_Admin
+ * @subpackage MKDO_Admin/admin
+ */
+
+/** 
+ * Load dependancies
+ */
+if( ! class_exists( 'MKDO_Class' ) )	require_once plugin_dir_path( __FILE__ ) . '../vendor/mkdo/mkdo-objects/admin/class-mkdo-class.php';
+if( ! class_exists( 'MKDO_Helper_User' ) )		require_once plugin_dir_path( __FILE__ ) . '../vendor/mkdo/mkdo-objects/includes/class-mkdo-helper-user.php';
+
+/**
+ * Admin profile
+ *
+ * Adds additional fields to profile page
+ *
+ * @package    MKDO_Admin
+ * @subpackage MKDO_Admin/admin
+ * @author     Make Do <hello@makedo.in>
+ */
+class MKDO_Admin_Profile extends MKDO_Class {
+
+	/**
+	 * Initialize the class and set its properties.
+	 *
+	 * @since    1.0.0
+	 * @var      string    $instance       The name of this plugin.
+	 * @var      string    $version    The version of this plugin.
+	 */
+	public function __construct( $instance, $version ) {
+		parent::__construct( $instance, $version );
+	}
+
+	/**
+	 * Add field to profile
+	 */
+	public function add_mkdo_user_profile_field( $user ) {
+	
+		/* bail out early if user is not an admin */
+		if ( ! MKDO_Helper_User::is_mkdo_user() )
+			return false;
+			
+		?>
+
+		<table class="form-table">
+
+			<tr>
+				<th scope="row">Admin Super User?</th>
+
+				<td>
+					
+					<fieldset>
+					
+						<legend class="screen-reader-text">
+							<span>Admin Super User?</span>
+						</legend>
+						
+						<label>
+							<input name="mkdo_user" type="checkbox" id="mkdo_user" value="1"<?php checked( get_user_meta( $user->ID, 'mkdo_user', true ) ) ?> />User is an MKDO user?.</label>
+					
+					</fieldset>
+					
+				</td>
+			</tr>
+		
+		</table>
+		
+		<?php
+			
+	}
+
+	/**
+	 * Save field data
+	 */
+	public function save_mkdo_user_profile_field_data( $user_id ) {
+		
+		/* check the current user is a super admin */
+		if ( ! current_user_can( 'manage_options', $user_id ) )
+			return false;
+			
+		/* get the current user information */
+		$mkdo_current_user = wp_get_current_user();
+		
+		/* update the user meta with the additional fields on the profile page */
+		update_usermeta( $user_id, 'mkdo_user', $_POST[ 'mkdo_user' ] );	
+	}
+
+	/**
+	 * Remove admin colour scheme
+	 */
+	public function remove_admin_color_schemes() {
+
+		if( ! MKDO_Helper_User::is_mkdo_user() ) {
+			remove_action( 'admin_color_scheme_picker', 'admin_color_scheme_picker' );
+		}
+		
+	}
+
+	/**
+	 * Force colour scheme
+	 */
+	public function force_user_color_scheme( $color_scheme ) {
+		
+		$current_user 	= wp_get_current_user();
+		$roles 			= $current_user->roles;
+
+		$color_scheme 	= 'midnight';
+
+		if ( MKDO_Helper_User::is_mkdo_user() ) {
+			$color_scheme 	= 'sunrise';
+		} 
+		else if( in_array( 'administrator', 		$roles) ) {
+			$color_scheme 	= 'ectoplasm';
+		}
+		else if( in_array( 'editor', 		$roles) ) {
+			$color_scheme 	= 'ocean';
+		}
+		else if( in_array( 'author', 		$roles) ) {
+			$color_scheme 	= 'blue';
+		}
+		else if( in_array( 'contributor', 	$roles) ) {
+			$color_scheme 	= 'coffee';
+		}
+		else if( in_array( 'subscriber', 	$roles) ) {
+			$color_scheme 	= 'light';
+		}
+
+		return $color_scheme;
+	}
+
+	/**
+	 * Change admin capabilites
+	 */
+	public function edit_user_capabilities( $capabilities ) {
+	
+		
+		/* setup an array of capabilities to change - filterable */
+		$mkdo_capabilities = apply_filters(
+			'mkdo_user_capabilities',
+			array(
+				array(
+					'capability_name' => 'update_core',
+					'capability_action' => MKDO_Helper_User::is_mkdo_user(),
+				),
+				array(
+					'capability_name' => 'update_plugins',
+					'capability_action' => MKDO_Helper_User::is_mkdo_user(),
+				),
+				array(
+					'capability_name' => 'activate_plugins',
+					'capability_action' => MKDO_Helper_User::is_mkdo_user(),
+				),
+				array(
+					'capability_name' => 'install_plugins',
+					'capability_action' => MKDO_Helper_User::is_mkdo_user(),
+				),
+			)
+		);
+		
+		/* loop through each capability */
+		foreach( $mkdo_capabilities as $mkdo_capability ) {
+			
+			/* check if the user has the capability */
+			if( ! empty( $capabilities[ $mkdo_capability[ 'capability_name' ] ] ) ) {
+			
+				/* action the capability - adding or remove accordingly */
+				$capabilities[ $mkdo_capability[ 'capability_name' ] ] = $mkdo_capability[ 'capability_action' ];
+			
+			}
+			
+		}
+										
+		/* return the modified capabilities */
+		return $capabilities;
+		
+	}
+}
