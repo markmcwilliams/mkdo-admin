@@ -26,6 +26,6 @@
 	"require": {
 		"humanmade/custom-meta-boxes": "dev-master",
 		"mkdo/mkdo-objects": "dev-master",
-		"fortawesome/font-awesome": "4.2.0",
+		"fortawesome/font-awesome": "4.2.0"
 	}
 }
