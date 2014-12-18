@@ -112,7 +112,7 @@ class MKDO_Admin_Menus extends MKDO_Class {
 	}
 
 	/**
-	 * Admin admin menu
+	 * Add admin menu
 	 */
 	public function add_mkdo_content_menu() {
 	
