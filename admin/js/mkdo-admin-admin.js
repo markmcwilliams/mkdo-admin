@@ -113,7 +113,7 @@
 			$('.toplevel_page_mkdo_dashboard #dashboard-widgets-wrap #dashboard-widgets .postbox-container .closed .inside').removeAttr('style');
 		}
 
-		$('.toplevel_page_mkdo_content_menu #dashboard-widgets-wrap #dashboard-widgets .postbox-container .postbox .hndle').click(function(){
+		$('.toplevel_page_mkdo_content_menu #dashboard-widgets-wrap #dashboard-widgets .postbox-container .postbox .hndle, .toplevel_page_mkdo_content_menu #dashboard-widgets-wrap #dashboard-widgets .postbox-container .postbox .handlediv').click(function(){
 
 			$('.toplevel_page_mkdo_content_menu #dashboard-widgets-wrap #dashboard-widgets .postbox-container .closed').removeAttr('style');
 			$('.toplevel_page_mkdo_content_menu #dashboard-widgets-wrap #dashboard-widgets .postbox-container .closed .inside').removeAttr('style');
