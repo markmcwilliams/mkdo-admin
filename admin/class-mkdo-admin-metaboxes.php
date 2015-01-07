@@ -78,21 +78,16 @@ class MKDO_Admin_Metaboxes extends MKDO_Class {
 						'page'		=> array('post','page'),
 						'context' 	=> 'normal'
 					),
+					array(
+						'id' 		=> 'tagsdiv-post_tag',
+						'page' 		=> array('post','page'),
+						'context' 	=> 'side'
+					),
 					// array(
-					// 	'id' 		=> 'tagsdiv-post_tag',
+					// 	'id' 		=> 'authordiv',
 					// 	'page' 		=> array('post','page'),
-					// 	'context' 	=> 'side'
+					// 	'context' 	=> 'normal'
 					// ),
-					array(
-						'id' 		=> 'authordiv',
-						'page' 		=> array('post','page'),
-						'context' 	=> 'normal'
-					),
-					array(
-						'id' 		=> 'authordiv',
-						'page' 		=> array('post','page'),
-						'context' 	=> 'normal'
-					),
 					array(
 						'id' 		=> 'wpseo_meta',
 						'page' 		=> 'all',

@@ -261,7 +261,7 @@ class MKDO_Admin {
 		 * Add 'Comments' dashboard block (from content dashboard)
 		 */
 		$this->loader->add_action( 'admin_menu', 						$dashboard_admin, 		'add_mkdo_dashboard' 					);
-		$this->loader->add_action( 'login_redirect', 					$dashboard_admin, 		'login_redirect', 						100, 3 );
+		$this->loader->add_action( 'login_redirect', 					$dashboard_admin, 		'login_redirect', 						9999, 3 );
 		$this->loader->add_action( 'mkdo_dashboard_blocks', 			$dashboard_admin, 		'add_content_block_to_mkdo_dashboard'	);
 		$this->loader->add_action( 'mkdo_dashboard_blocks', 			$dashboard_admin, 		'add_profile_block_to_mkdo_dashboard'	);
 		$this->loader->add_action( 'mkdo_dashboard_blocks', 			$menus_admin, 			'add_comments_to_mkdo_dashboard'		);
