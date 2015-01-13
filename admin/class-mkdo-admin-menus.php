@@ -316,12 +316,36 @@ class MKDO_Admin_Menus extends MKDO_Class {
 	public function correct_menu_hierarchy( $parent_file ) {
 	
 		global $current_screen;
+		global $submenu;
+
+		$pages 	= array();
+		$parent = 'mkdo_content_menu' ;
+		
+		if ( is_array( $submenu ) && isset( $submenu[$parent] ) ) {
+
+			foreach ( (array) $submenu[$parent] as $item) {
+				if ( $parent == $item[2] || $parent == $item[2] )
+						continue;
+				if ( current_user_can($item[1]) ) {
+					$menu_file = $item[2];
+					if ( false !== ( $pos = strpos( $menu_file, '?' ) ) )
+						$menu_file = substr( $menu_file, 0, $pos );
+					if ( file_exists( ABSPATH . "wp-admin/$menu_file" ) ) {
+						$pages[] = $item[0];
+					} else {
+						$pages[] = $item[0];
+					}
+				}
+			}
+		}
+
+		$post_type = get_post_type_object( $current_screen->post_type );
 		
 		/* get the base of the current screen */
 		$screenbase = $current_screen->base;
 
 		/* if this is the edit.php base */
-		if( $screenbase == 'edit' || $screenbase == 'post' ) {
+		if( $screenbase == 'edit' || ( $screenbase == 'post' && in_array( $post_type, $pages ) ) ) {
 
 			/* set the parent file slug to the custom content page */
 			$parent_file = 'mkdo_content_menu';
@@ -330,7 +354,6 @@ class MKDO_Admin_Menus extends MKDO_Class {
 		
 		/* return the new parent file */	
 		return $parent_file;
-		
 	}
 
 	/**
