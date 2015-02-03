@@ -119,8 +119,8 @@ class MKDO_Admin_Dashboard extends MKDO_Class {
 	
 		if( $user && is_object( $user ) && !is_wp_error( $user ) && is_a( $user, 'WP_User' ) ) {
 
-			if( ! MKDO_Helper_User::is_mkdo_user( $user->ID ) ) {
-
+			if( !get_user_meta( $user->ID, 'mkdo_user', TRUE ) ) {
+			
 				$redirect_to = apply_filters( 'mkdo_login_redirect', admin_url( 'admin.php?page=mkdo_dashboard' ) );
 				
 			} else {

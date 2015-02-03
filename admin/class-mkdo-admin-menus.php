@@ -211,12 +211,16 @@ class MKDO_Admin_Menus extends MKDO_Class {
 									</div>
 									
 									<?php
-						
+										
 										if( $block[ 'show_tax' ] == true ) {
 											
 											$taxonomies = get_object_taxonomies( $block[ 'post_type' ], 'objects' );
-											
+
 											unset( $taxonomies[ 'post_format' ] );
+											unset( $taxonomies[ 'post_status' ] );
+											unset( $taxonomies[ 'ef_editorial_meta' ] );
+											unset( $taxonomies[ 'following_users' ] );
+											unset( $taxonomies[ 'ef_usergroup' ] );
 											
 											if( ! empty( $taxonomies ) ) {
 												

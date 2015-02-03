@@ -53,6 +53,10 @@ class MKDO_Admin_Notices extends MKDO_Class {
 			$taxonomies = get_object_taxonomies( $typenow, 'objects' );
 			/* remove post formats */
 			unset( $taxonomies[ 'post_format' ] );
+			unset( $taxonomies[ 'post_status' ] );
+			unset( $taxonomies[ 'ef_editorial_meta' ] );
+			unset( $taxonomies[ 'following_users' ] );
+			unset( $taxonomies[ 'ef_usergroup' ] );
 			
 			/* check we have taxonomies to show */
 			if( ! empty( $taxonomies ) ) {
