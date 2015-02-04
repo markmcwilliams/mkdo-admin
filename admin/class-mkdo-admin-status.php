@@ -40,7 +40,7 @@ class MKDO_Admin_Status extends MKDO_Class {
 	 */
 	public function add_archived_status() {
 		register_post_status( 'archived', array(
-			'label'                     => _x( 'Archived', $instance ),
+			'label'                     => 'Archived',
 			'public'                    => true,
 			'exclude_from_search'       => true,
 			'show_in_admin_all_list'    => true,
