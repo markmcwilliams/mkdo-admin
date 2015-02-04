@@ -140,6 +140,16 @@ class MKDO_Admin {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-mkdo-admin-columns.php';
 
 		/**
+		 * The classes responsible for defining all the taxonomies.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-mkdo-admin-taxonomies.php';
+
+		/**
+		 * The classes responsible for defining all the statuses.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-mkdo-admin-status.php';
+
+		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
@@ -191,7 +201,8 @@ class MKDO_Admin {
 		$cpt_pages				= new MKDO_Admin_CPT_Pages					( $this->get_mkdo_admin(), $this->get_version() );
 		$metaboxes_admin		= new MKDO_Admin_Metaboxes					( $this->get_mkdo_admin(), $this->get_version() );
 		$columns_admin			= new MKDO_Admin_Columns					( $this->get_mkdo_admin(), $this->get_version() );
-
+		$taxonomies				= new MKDO_Admin_Taxonomies					( $this->get_mkdo_admin(), $this->get_version() );
+		$status 				= new MKDO_Admin_Status						( $this->get_mkdo_admin(), $this->get_version() );
 
 		/** 
 		 * Admin Bar 
@@ -240,7 +251,7 @@ class MKDO_Admin {
 		 */
 		$this->loader->add_filter( 'admin_footer_text', 				$footer_admin, 			'remove_admin_footer', 					9999	);
 		$this->loader->add_filter( 'update_footer', 					$footer_admin, 			'remove_admin_version', 				9999	);
-		$this->loader->add_filter( 'admin_footer_text', 				$footer_admin, 			'add_mkdo_footer_text', 				9999	);
+		//$this->loader->add_filter( 'admin_footer_text', 				$footer_admin, 			'add_mkdo_footer_text', 				9999	);
 
 		/** 
 		 * Scripts
@@ -272,6 +283,8 @@ class MKDO_Admin {
 		 * Remove admin menus
 		 * Remove admin sub menus
 		 * Add custom menu
+		 * Rename media menu
+		 * Rename media page
 		 * Add posts to menu
 		 * Add pages to menu
 		 * Add 'comments' to menu dashbaord
@@ -279,6 +292,8 @@ class MKDO_Admin {
 		$this->loader->add_action( 'admin_menu', 						$menus_admin, 			'remove_admin_menus', 					9999 );
 		$this->loader->add_action( 'admin_menu', 						$menus_admin, 			'remove_admin_sub_menus', 				9999 );
 		$this->loader->add_action( 'admin_menu', 						$menus_admin, 			'add_mkdo_content_menu', 				5 );
+		$this->loader->add_action( 'admin_menu', 						$menus_admin, 			'rename_mkdo_media_menu' 				);
+		$this->loader->add_filter( 'gettext', 							$menus_admin, 			'rename_mkdo_media_page', 				10,3);
 		$this->loader->add_action( 'admin_menu', 						$menus_admin, 			'add_posts_to_mkdo_content', 			9 );
 		$this->loader->add_action( 'admin_menu', 						$menus_admin, 			'add_pages_to_mkdo_content', 			9 );
 		$this->loader->add_action( 'mkdo_after_content_blocks', 		$menus_admin, 			'add_comments_to_mkdo_dashboard'		);
@@ -325,6 +340,16 @@ class MKDO_Admin {
 		$this->loader->add_action( 'do_meta_boxes', 		$metaboxes_admin, 		'remove_metaboxes' 						);
 
 		/** 
+		 * Taxonomies
+		 *
+		 * Add category to page
+		 * Add tag to page
+		 */
+		$this->loader->add_action( 'admin_init', 			$taxonomies, 			'add_category_to_page' 					);
+		$this->loader->add_action( 'admin_init', 			$taxonomies, 			'add_tags_to_page' 						);
+
+
+		/** 
 		 * Columns
 		 *
 		 * Remove the columns
@@ -332,6 +357,26 @@ class MKDO_Admin {
 		$this->loader->add_filter( 'init', 					$columns_admin, 		'remove_custom_post_columns', 			9999, 1 );
 		$this->loader->add_filter( 'admin_init', 			$columns_admin, 		'remove_column_filters', 				9999 );
 
+
+		/** 
+		 * Statuses
+		 *
+		 * Register the status
+		 * Make the status choosable
+		 * Dispaly the post status in the post list
+		 * Override Edit Flow post list status disable
+		 * Add status to Edit Flow column
+		 */
+		$this->loader->add_action( 'init', 							$status, 				'add_archived_status' 					);
+		$this->loader->add_action( 'admin_footer-post.php',			$status, 				'make_archived_status_choosable' 		);
+		$this->loader->add_filter( 'display_post_states', 			$status, 				'add_archived_status_to_post_list'	 	);
+		//$this->loader->add_action( 'admin_enqueue_scripts', 		$status, 				'override_edit_flow_status', 			9999 );
+		$this->loader->add_action( 'manage_posts_custom_column', 	$status, 				'override_edit_flow_stauts_column'	 	);
+		$this->loader->add_action( 'manage_pages_custom_column', 	$status, 				'override_edit_flow_stauts_column'	 	);
+
+		// Add status to posts
+		$this->loader->add_filter( 'mkdo_custom_status_archived_filter', 	$cpt_posts, 	'post_type_filter' 						);
+		
 		/**
 		 * Add actions from other hooks
 		 *
@@ -348,7 +393,13 @@ class MKDO_Admin {
 	 * @access   public
 	 */
 	public function define_admin_dependancy_hooks() {
+		
+		if( class_exists( 'MKDO_Incidents' ) ) {
 
+			$cpt_incidents 			= new MKDO_Incidents_CPT_incidents				( $this->get_mkdo_admin(), $this->get_version() );
+			
+			add_filter( 'mkdo_custom_status_archived_filter', array( $cpt_incidents, 'post_type_filter' ) );
+		}
 	}
 
 	/**

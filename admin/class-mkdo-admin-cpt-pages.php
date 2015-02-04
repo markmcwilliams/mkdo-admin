@@ -9,11 +9,6 @@
  * @subpackage MKDO_Admin/admin
  */
 
-/** 
- * Load dependancies
- */
-if( ! class_exists( 'MKDO_CPT' ) )	require_once plugin_dir_path( __FILE__ ) . '../vendor/mkdo/mkdo-objects/admin/class-mkdo-cpt.php';
-
 /**
  * Class for a custom post type.
  *
@@ -35,11 +30,11 @@ class MKDO_Admin_CPT_Pages extends MKDO_CPT {
 	public function __construct( $instance, $version, $args = array() ) {
 
 		$custom 						= 	array(
-												'cpt_name' 			=> 'pages',
+												'cpt_name' 			=> 'page',
 												'dash_icon' 		=> 'dashicons-admin-page',
 												'name_singular' 	=> 'Page',
 												'name_plural' 		=> 'Pages',
-												'slug' 				=> 'pages',
+												'slug' 				=> 'page',
 											);
 		$args 							= 	array_merge( $custom, $args );
 

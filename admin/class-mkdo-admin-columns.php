@@ -9,12 +9,6 @@
  * @subpackage MKDO_Admin/admin
  */
 
-/** 
- * Load dependancies
- */
-if( ! class_exists( 'MKDO_Class' ) )	require_once plugin_dir_path( __FILE__ ) . '../vendor/mkdo/mkdo-objects/admin/class-mkdo-class.php';
-if( ! class_exists( 'MKDO_Helper_User' ) )		require_once plugin_dir_path( __FILE__ ) . '../vendor/mkdo/mkdo-objects/includes/class-mkdo-helper-user.php';
-
 /**
  * Admin profile
  *

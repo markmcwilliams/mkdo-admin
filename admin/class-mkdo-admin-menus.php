@@ -9,13 +9,6 @@
  * @subpackage MKDO_Admin/admin
  */
 
-/** 
- * Load dependancies
- */
-if( ! class_exists( 'MKDO_Class' ) )			require_once plugin_dir_path( __FILE__ ) . '../vendor/mkdo/mkdo-objects/admin/class-mkdo-class.php';
-if( ! class_exists( 'MKDO_Helper_User' ) )		require_once plugin_dir_path( __FILE__ ) . '../vendor/mkdo/mkdo-objects/includes/class-mkdo-helper-user.php';
-if( ! class_exists( 'MKDO_Helper_Screen' ) )	require_once plugin_dir_path( __FILE__ ) . '../vendor/mkdo/mkdo-objects/includes/class-mkdo-helper-screen.php';
-
 /**
  * The menus
  *
@@ -52,6 +45,7 @@ class MKDO_Admin_Menus extends MKDO_Class {
 		$menus[] = 'edit.php';
 		$menus[] = 'edit.php?post_type=page';
 		$menus[] = 'edit-comments.php';
+		//$menus[] = 'upload.php';
 
 		if( ! MKDO_Helper_User::is_mkdo_user() ) {
 
@@ -112,6 +106,38 @@ class MKDO_Admin_Menus extends MKDO_Class {
 	}
 
 	/**
+	 * Rename media menu
+	 */
+	public function rename_mkdo_media_menu() {
+	
+		global $menu;
+
+		foreach( $menu as $menu_item )
+		{
+			if( $menu_item[0] == 'Media' )
+			{
+				 $menu_item[0] = 'Assets';
+			}
+		}
+
+		print_r($post);
+	}
+
+	/**
+	 * Rename media menu
+	 */
+	public function rename_mkdo_media_page( $translation, $text, $domain )
+	{
+	    if ( 'default' == $domain and 'Media Library' == $text )
+	    {
+	        // Once is enough.
+	        remove_filter( 'gettext', 'rename_mkdo_media_page' );
+	        return 'Assets Library';
+	    }
+	    return $translation;
+	}
+
+	/**
 	 * Add admin menu
 	 */
 	public function add_mkdo_content_menu() {
@@ -126,7 +152,6 @@ class MKDO_Admin_Menus extends MKDO_Class {
 			'dashicons-admin-page',
 			'26'
 		);
-		
 	}
 
 	/**
@@ -294,8 +319,8 @@ class MKDO_Admin_Menus extends MKDO_Class {
 	public function add_posts_to_mkdo_content() {
 		add_submenu_page(
 			'mkdo_content_menu',
-			'Posts',
-			'Posts',
+			'News',
+			'News',
 			'edit_posts',
 			'edit.php'
 		);
