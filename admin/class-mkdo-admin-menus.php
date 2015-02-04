@@ -119,8 +119,6 @@ class MKDO_Admin_Menus extends MKDO_Class {
 				 $menu_item[0] = 'Assets';
 			}
 		}
-
-		print_r($post);
 	}
 
 	/**
