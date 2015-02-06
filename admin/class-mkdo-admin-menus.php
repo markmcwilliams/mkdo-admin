@@ -111,14 +111,8 @@ class MKDO_Admin_Menus extends MKDO_Class {
 	public function rename_mkdo_media_menu() {
 	
 		global $menu;
-
-		foreach( $menu as $menu_item )
-		{
-			if( $menu_item[0] == 'Media' )
-			{
-				 $menu_item[0] = 'Assets';
-			}
-		}
+		
+		$menu[10][0] = 'Assets';
 	}
 
 	/**

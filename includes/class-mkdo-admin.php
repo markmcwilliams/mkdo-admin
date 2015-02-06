@@ -338,6 +338,7 @@ class MKDO_Admin {
 		 * Remove the metaboxes
 		 */
 		$this->loader->add_action( 'do_meta_boxes', 		$metaboxes_admin, 		'remove_metaboxes' 						);
+		$this->loader->add_action( 'default_hidden_meta_boxes', $metaboxes_admin, 	'hide_metaboxes', 						10, 2 );
 
 		/** 
 		 * Taxonomies
@@ -354,7 +355,8 @@ class MKDO_Admin {
 		 *
 		 * Remove the columns
 		 */
-		$this->loader->add_filter( 'init', 					$columns_admin, 		'remove_custom_post_columns', 			9999, 1 );
+		$this->loader->add_filter( 'init', 					$columns_admin, 		'remove_custom_post_columns', 			9998, 1 );
+		$this->loader->add_action( 'parse_request', 		$columns_admin, 		'hide_columns'							);
 		$this->loader->add_filter( 'admin_init', 			$columns_admin, 		'remove_column_filters', 				9999 );
 
 

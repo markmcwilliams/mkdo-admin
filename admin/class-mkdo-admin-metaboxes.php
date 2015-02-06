@@ -87,6 +87,11 @@ class MKDO_Admin_Metaboxes extends MKDO_Class {
 						'page' 		=> 'all',
 						'context' 	=> 'normal'
 					),
+					array(
+						'id' 		=> 'relevanssi_hidebox',
+						'page' 		=> 'all',
+						'context' 	=> 'normal'
+					),
 				)
 			);
 			
@@ -109,5 +114,32 @@ class MKDO_Admin_Metaboxes extends MKDO_Class {
 			}
 			
 		}
+	}
+
+	/** 
+	 * Hide metaboxes
+	 */
+	public function hide_metaboxes( $hidden, $screen ) {
+
+
+		$hidden 	= 	apply_filters(
+							'mkdo_hide_metaboxes',
+							array(
+								'postcustom',
+								'commentsdiv',
+								'commentstatusdiv',
+								'slugdiv',
+								'trackbacksdiv',
+								'revisionsdiv',
+								'tagsdiv-post_tag',
+								'authordiv',
+								'wpseo_meta',
+								'relevanssi_hidebox',
+							)
+						);
+
+
+
+		return $hidden;
 	}
 }

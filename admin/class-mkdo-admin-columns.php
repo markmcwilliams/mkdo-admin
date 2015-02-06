@@ -47,6 +47,14 @@ class MKDO_Admin_Columns extends MKDO_Class {
 					'wpseo-title',
 					'wpseo-metadesc',
 					'wpseo-focuskw',
+					'google_last30',
+					'twitter_shares',
+					'linkedin_shares',
+					'facebook_likes',
+					'facebook_shares',
+					'total_shares',
+					'decay_views',
+					'decay_shares',
 				)
 			);
 			
@@ -58,13 +66,62 @@ class MKDO_Admin_Columns extends MKDO_Class {
 	}
 
 	/**
+	 * Hide columns
+	 */
+	public function hide_columns() {
+		
+		if( is_admin() ) {
+
+			$user 		= wp_get_current_user();
+			$screen 	= get_current_screen();
+			$columns 	= get_column_headers( $screen );
+
+			$mkdo_columns = apply_filters(
+				'mkdo_hide_columns',
+				array(
+					'comments',
+					'tags',
+					'wpseo-score',
+					'wpseo-title',
+					'wpseo-metadesc',
+					'wpseo-focuskw',
+					'google_last30',
+					'twitter_shares',
+					'linkedin_shares',
+					'facebook_likes',
+					'facebook_shares',
+					'total_shares',
+					'decay_views',
+					'decay_shares',
+				)
+			);
+			
+			//$hidden_columns 	= get_user_option( 'manage' . $screen->id . 'columnshidden',  $user->ID );
+			$hidden_columns 	= array();
+
+			foreach( $columns as $column=>$value ) 
+			{
+				if( in_array( $column, $mkdo_columns ) || in_array( 'all', $mkdo_columns ) ) {
+
+					if( !in_array( $column, $hidden_columns ) && $column != 'cb' && $column != 'title' && $column != 'date'  ){
+
+						$hidden_columns[] 		= $column;
+					} 
+				}
+			}
+			update_user_option( $user->ID, 'manage' . $screen->id . 'columnshidden', $hidden_columns );
+		}
+		
+	}
+
+	/**
 	 * Remove columns for each post type
 	 */
 	public function remove_custom_post_columns() {
 
 		foreach( get_post_types() as $post_type )
 		{
-			add_filter( 'manage_' . $post_type . '_posts_columns', 	array( $this, 'remove_columns' ), 9999, 1 );
+			add_filter( 'manage_' . $post_type . '_posts_columns', 	array( $this, 'remove_columns' ), 9998, 1 );
 		}
 	}
 
