@@ -257,7 +257,7 @@ class MKDO_Admin {
 		 * Scripts
 		 *
 		 * Enqueue the styles
-		 * Enquwes the scripts
+		 * Enqueue the scripts
 		 */
 		$this->loader->add_action( 'admin_enqueue_scripts', 			$plugin_admin, 			'enqueue_styles' 						);
 		$this->loader->add_action( 'admin_enqueue_scripts', 			$plugin_admin, 			'enqueue_scripts' 						);
