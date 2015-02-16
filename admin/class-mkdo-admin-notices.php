@@ -79,6 +79,35 @@ class MKDO_Admin_Notices extends MKDO_Class {
 			</div>
 			<?php
 			}
+
+			if ( class_exists("sc_bulk_page_creator") && isset( $_GET['post_type'] ) && $_GET['post_type'] == 'page' ) {
+				?>
+				<div class="updated view-notice">
+					<h3 class="view-title">View:</h3>
+					
+					<ul class="view-list">
+					<?php
+						if( isset( $_GET['page'] ) && $_GET['page'] == 'cms-tpv-page-page' ) {
+							?>
+								<li class="">
+									<span class="dashicons-before dashicons-editor-justify"></span>
+									<a href="<?php echo admin_url( 'edit.php?post_type=page' ); ?>">Standard View</a>
+								</li>
+							<?php
+						}
+						else {
+							?>
+								<li class="">
+									<span class="dashicons-before dashicons-networking"></span>
+									<a href="<?php echo admin_url( 'edit.php?post_type=page&page=cms-tpv-page-page' ); ?>">Tree View</a>
+								</li>
+							<?php
+						}
+					?>
+					</ul>
+				</div>
+				<?php
+			}
 		}
 	}
 }

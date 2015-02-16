@@ -205,6 +205,12 @@ class MKDO_Admin_Menus extends MKDO_Class {
 								
 								$post_new = admin_url( 'post-new.php?post_type=' . $block[ 'post_type' ] );
 								$post_listing = admin_url( 'edit.php?post_type=' . $block[ 'post_type' ] );
+
+								if ( class_exists('sc_bulk_page_creator') ) { 
+									if( $post_listing = 'edit.php?post_type=page' ) {
+										$post_listing = 'edit.php?post_type=page&page=cms-tpv-page-page';
+									}
+								}
 								
 								$css_block_class = $block[ 'css_class' ];
 								
@@ -322,13 +328,27 @@ class MKDO_Admin_Menus extends MKDO_Class {
 	 * Add posts to the menu
 	 */
 	public function add_pages_to_mkdo_content() {
-		add_submenu_page(
-			'mkdo_content_menu',
-			'Pages',
-			'Pages',
-			'edit_posts',
-			'edit.php?post_type=page'
-		);
+		
+		if ( class_exists('sc_bulk_page_creator') ) {
+
+			add_submenu_page(
+				'mkdo_content_menu',
+				'Pages',
+				'Pages',
+				'edit_posts',
+				'edit.php?post_type=page&page=cms-tpv-page-page'
+			);
+
+		}
+		else {
+			add_submenu_page(
+				'mkdo_content_menu',
+				'Pages',
+				'Pages',
+				'edit_posts',
+				'edit.php?post_type=page'
+			);
+		}		
 	}
 
 	/**
@@ -362,6 +382,15 @@ class MKDO_Admin_Menus extends MKDO_Class {
 
 		$post_type = get_post_type_object( $current_screen->post_type );
 		
+		if( isset( $post_type->labels ) && isset( $post_type->labels->name ) ) {
+			$post_type = $post_type->labels->name;
+		}
+		
+
+		if( $post_type == 'Posts' ) {
+			$post_type = 'News'; //TODO quick hack for this instance, need a better way.
+		}
+		
 		/* get the base of the current screen */
 		$screenbase = $current_screen->base;
 
@@ -371,6 +400,10 @@ class MKDO_Admin_Menus extends MKDO_Class {
 			/* set the parent file slug to the custom content page */
 			$parent_file = 'mkdo_content_menu';
 			
+		}
+
+		if( class_exists('sc_bulk_page_creator') && $screenbase == 'pages_page_cms-tpv-page-page' ) {
+			$parent_file = 'mkdo_content_menu';
 		}
 		
 		/* return the new parent file */	
@@ -383,7 +416,7 @@ class MKDO_Admin_Menus extends MKDO_Class {
 	public function correct_sub_menu_hierarchy() {
 		global $submenu;
 		
-		foreach($submenu['edit.php?post_type=page'] as $key=>$smenu) {
+		foreach( $submenu['edit.php?post_type=page'] as $key=>$smenu ) {
 			$submenu['edit.php?post_type=page'][$key][2] = $smenu[2] . '&post_type=page';
 		}
 
