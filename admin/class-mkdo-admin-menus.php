@@ -325,27 +325,16 @@ class MKDO_Admin_Menus extends MKDO_Class {
 	 * Add pages to the menu
 	 */
 	public function add_posts_to_mkdo_content() {
-		
-		if( isset( $this->args['posts'] )  && isset( $this->args['posts']['name_plural'] ) ) {
-			add_submenu_page(
-				'mkdo_content_menu',
-				$this->args['posts']['name_plural'],
-				$this->args['posts']['name_plural'],
-				'edit_posts',
-				'edit.php'
-			);
-		} 
-		else {
-			add_submenu_page(
-				'mkdo_content_menu',
-				'Posts',
-				'Posts',
-				'edit_posts',
-				'edit.php'
-			);
-		}
 
-		
+		$post_name = ( isset( $this->args['posts'] )  && isset( $this->args['posts']['name_plural'] ) ) ? $this->args['posts']['name_plural'] : 'Posts';
+
+		add_submenu_page(
+			'mkdo_content_menu',
+			$post_name,
+			$post_name,
+			'edit_posts',
+			'edit.php'
+		);
 	}
 
 	/**
@@ -353,12 +342,14 @@ class MKDO_Admin_Menus extends MKDO_Class {
 	 */
 	public function add_pages_to_mkdo_content() {
 		
+		$page_name = ( isset( $this->args['pages'] ) && isset( $this->args['pages']['name_plural'] ) ) ? $this->args['pages']['name_plural'] : 'Pages';
+
 		if ( class_exists('sc_bulk_page_creator') ) {
 
 			add_submenu_page(
 				'mkdo_content_menu',
-				'Pages',
-				'Pages',
+				$page_name,
+				$page_name,
 				'edit_posts',
 				'edit.php?post_type=page&page=cms-tpv-page-page'
 			);
@@ -367,8 +358,8 @@ class MKDO_Admin_Menus extends MKDO_Class {
 		else {
 			add_submenu_page(
 				'mkdo_content_menu',
-				'Pages',
-				'Pages',
+				$page_name,
+				$page_name,
 				'edit_posts',
 				'edit.php?post_type=page'
 			);
