@@ -32,8 +32,8 @@ class MKDO_Admin_CPT_Posts extends MKDO_CPT {
 		$custom 						= 	array(
 												'cpt_name' 			=> 'post',
 												'dash_icon' 		=> 'dashicons-admin-post',
-												'name_singular' 	=> 'News',
-												'name_plural' 		=> 'News',
+												'name_singular' 	=> 'Post',
+												'name_plural' 		=> 'Posts',
 												'slug' 				=> 'post',
 											);
 		$args 							= 	array_merge( $custom, $args );

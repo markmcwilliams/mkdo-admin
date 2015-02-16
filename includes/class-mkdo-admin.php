@@ -185,6 +185,22 @@ class MKDO_Admin {
 	 */
 	private function define_admin_hooks() {
 
+		/**
+		 * Customisation
+		 *
+		 * Custom parameters for the various classes
+		 */
+		$custom_page_title_args = 	array();
+		$custom_post_title_args = 	array(
+										'name_singular' 	=> 'News',
+										'name_plural' 		=> 'News' 
+									);
+
+		$custom_menu_args 		=	array(
+										'posts'				=> $custom_post_title_args,
+										'pages'				=> $custom_page_title_args,
+									);
+
 		/** 
 		 * Classes
 		 *
@@ -194,11 +210,11 @@ class MKDO_Admin {
 		$admin_bar_admin		= new MKDO_Admin_bar						( $this->get_mkdo_admin(), $this->get_version() );
 		$footer_admin			= new MKDO_Admin_Footer						( $this->get_mkdo_admin(), $this->get_version() );
 		$dashboard_admin		= new MKDO_Admin_Dashboard					( $this->get_mkdo_admin(), $this->get_version() );
-		$menus_admin			= new MKDO_Admin_Menus						( $this->get_mkdo_admin(), $this->get_version() );
+		$menus_admin			= new MKDO_Admin_Menus						( $this->get_mkdo_admin(), $this->get_version(), $custom_menu_args 			);
 		$notices_admin			= new MKDO_Admin_Notices					( $this->get_mkdo_admin(), $this->get_version() );
 		$profile_admin			= new MKDO_Admin_Profile					( $this->get_mkdo_admin(), $this->get_version() );
-		$cpt_posts				= new MKDO_Admin_CPT_Posts					( $this->get_mkdo_admin(), $this->get_version() );
-		$cpt_pages				= new MKDO_Admin_CPT_Pages					( $this->get_mkdo_admin(), $this->get_version() );
+		$cpt_posts				= new MKDO_Admin_CPT_Posts					( $this->get_mkdo_admin(), $this->get_version(), $custom_post_title_args 	);
+		$cpt_pages				= new MKDO_Admin_CPT_Pages					( $this->get_mkdo_admin(), $this->get_version(), $custom_page_title_args 	);
 		$metaboxes_admin		= new MKDO_Admin_Metaboxes					( $this->get_mkdo_admin(), $this->get_version() );
 		$columns_admin			= new MKDO_Admin_Columns					( $this->get_mkdo_admin(), $this->get_version() );
 		$taxonomies				= new MKDO_Admin_Taxonomies					( $this->get_mkdo_admin(), $this->get_version() );

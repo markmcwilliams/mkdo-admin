@@ -21,18 +21,28 @@
 class MKDO_Admin_Menus extends MKDO_Class {
 
 	/**
+	 * The arguments for the CPT
+	 *
+	 * @since    1.0.0
+	 * @access   protected
+	 * @var      array    $args    The arguments for the CPT.
+	 */
+	protected $args;
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
 	 * @var      string    $instance       The name of this plugin.
 	 * @var      string    $version    The version of this plugin.
 	 */
-	public function __construct( $instance, $version ) {
+	public function __construct( $instance, $version, $args = array() ) {
 		parent::__construct( $instance, $version );
 
 		add_action( 'parent_file', 	array( $this, 'correct_menu_hierarchy'), 9999 );
 		add_action( 'admin_head', 	array( $this, 'correct_sub_menu_hierarchy') );
 		
+		$this->args = $args;
 	}
 
 	/**
@@ -387,8 +397,12 @@ class MKDO_Admin_Menus extends MKDO_Class {
 		}
 		
 
-		if( $post_type == 'Posts' ) {
-			$post_type = 'News'; //TODO quick hack for this instance, need a better way.
+		if( $post_type == 'Posts' && isset( $this->args['posts'] )  && isset( $this->args['posts']['name_plural'] ) ) {
+			$post_type = $this->args['posts']['name_plural'];
+		}
+
+		if( $post_type == 'Pages' && isset( $this->args['pages'] )  && isset( $this->args['pages']['name_plural'] ) ) {
+			$post_type = $this->args['pages']['name_plural'];
 		}
 		
 		/* get the base of the current screen */
