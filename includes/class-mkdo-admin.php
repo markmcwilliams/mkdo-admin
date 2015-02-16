@@ -192,13 +192,13 @@ class MKDO_Admin {
 		 */
 		$custom_page_title_args = 	array();
 		$custom_post_title_args = 	array(
-										'name_singular' 	=> 'News',
-										'name_plural' 		=> 'News' 
+										// 'name_singular' 	=> 'News',
+										// 'name_plural' 		=> 'News' 
 									);
 
 		$custom_menu_args 		=	array(
-										'posts'				=> $custom_post_title_args,
-										'pages'				=> $custom_page_title_args,
+										// 'posts'				=> $custom_post_title_args,
+										// 'pages'				=> $custom_page_title_args,
 									);
 
 		/** 

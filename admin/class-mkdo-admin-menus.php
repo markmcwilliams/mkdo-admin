@@ -325,13 +325,27 @@ class MKDO_Admin_Menus extends MKDO_Class {
 	 * Add pages to the menu
 	 */
 	public function add_posts_to_mkdo_content() {
-		add_submenu_page(
-			'mkdo_content_menu',
-			'News',
-			'News',
-			'edit_posts',
-			'edit.php'
-		);
+		
+		if( isset( $this->args['posts'] )  && isset( $this->args['posts']['name_plural'] ) ) {
+			add_submenu_page(
+				'mkdo_content_menu',
+				$this->args['posts']['name_plural'],
+				$this->args['posts']['name_plural'],
+				'edit_posts',
+				'edit.php'
+			);
+		} 
+		else {
+			add_submenu_page(
+				'mkdo_content_menu',
+				'Posts',
+				'Posts',
+				'edit_posts',
+				'edit.php'
+			);
+		}
+
+		
 	}
 
 	/**
