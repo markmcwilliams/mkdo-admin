@@ -47,10 +47,10 @@ class MKDO_Admin_Public {
 	 * @var      string    $mkdo_admin       The name of the plugin.
 	 * @var      string    $version    The version of this plugin.
 	 */
-	public function __construct( $mkdo_admin, $version ) {
+	public function __construct( $instance, $version ) {
 
-		$this->mkdo_admin = $mkdo_admin;
-		$this->version = $version;
+		$this->instance = $instance;
+		$this->version 	= $version;
 
 	}
 
@@ -73,7 +73,7 @@ class MKDO_Admin_Public {
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->mkdo_admin, plugin_dir_url( __FILE__ ) . 'css/mkdo-admin-public.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->instance, plugin_dir_url( __FILE__ ) . 'css/mkdo-admin-public.css', array(), $this->version, 'all' );
 
 	}
 
@@ -96,7 +96,7 @@ class MKDO_Admin_Public {
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->mkdo_admin, plugin_dir_url( __FILE__ ) . 'js/mkdo-admin-public.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->instance, plugin_dir_url( __FILE__ ) . 'js/mkdo-admin-public.js', array( 'jquery' ), $this->version, false );
 
 	}
 
