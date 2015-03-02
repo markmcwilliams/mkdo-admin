@@ -322,6 +322,8 @@ class MKDO_Admin extends MKDO_Class {
 		//										'remove_original_menu' 				=> 		TRUE,
 		//										'remove_original_sub_menu' 			=> 		FALSE,
 		//										'remove_original_sub_menu_parent' 	=> 		'',
+		// 										'admin_remove'						=>		TRUE,
+		// 										'mkdo_remove'						=> 		TRUE
 		//										'add_to_dashboard'					=> 		TRUE,
 		//										'add_to_dashboard_slug'				=> 		'mkdo_content_menu',
 		//									);
@@ -330,11 +332,13 @@ class MKDO_Admin extends MKDO_Class {
 		//	 - 'menu_name' is the name of the menu (if you are renaming the mneuy also change this)
 		//	 - 'capability' is the access required to view the menu item
 		//	 - 'function' is the function or the URL that the menu item links to
-		//	 - 'admin_add' will add the item if the user is an administrator
-		//	 - 'mkdo_add' will add the item if the user is an MKDO admin
+		//	 - 'admin_add' will add the item only if the user is an administrator
+		//	 - 'mkdo_add' will add the item only if the user is an MKDO admin
 		//	 - 'remove_original_menu' will remove the original menu item before adding it to the menu
 		//	 - 'remove_original_sub_menu' will remove the original sub menu item before adding it to the menu
 		//	 - 'remove_original_sub_menu_parent' the parent of the sub menu item that needs removing
+		//	 - 'admin_remove' will remove the item for admins
+		// 	 - 'mkdo_remove' will remove the item for super users
 		//	 - 'add_to_dashboard' will add the menu item to a dashboard
 		//	 - 'add_to_dashboard_slug' the slug of the dashboard to add to
 		//	 
