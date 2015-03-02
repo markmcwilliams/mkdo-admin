@@ -264,13 +264,14 @@ class MKDO_Admin extends MKDO_Class {
 		}
 		
 		// Add custom admin logo
+		// 
 		// - To use a custom logo you must not use 'remove_wp_admin_logo'
 		// - The CSS in this function will vary from stie to site
 		// - For best results the logo should not be larger then 20px in height
 		// - To make this work by default place an image 20x20px in your theme /img/ 
 		//   folder named 'admin-logo.php'
 		// - For more complex customisation copy the template in the /admin/partials/ folder in this plugin 
-		//   to your theme in one of these locations. Here you can alter the image path and CSS as required
+		//   to your theme in one of these locations. Here you can alter the image path and CSS as required:
 		//   - /mkdo-admin/custom-admin-logo.php
 		//   - /partials/custom-admin-logo.php
 		if( get_option( 'mkdo_admin_custom_admin_logo', FALSE ) === TRUE ) { 
@@ -307,9 +308,11 @@ class MKDO_Admin extends MKDO_Class {
 		 */
 		
 		// Add custom menu
+		// 
 		// - Use the filter ''mkdo_content_menu_add_menu_items' to add menu items
 		// - Each item in the filter is an array in the following format
 		// 		$mkdo_content_menus[] 	= 	array( 
+		// 										'post_type'							=>		'page',
 		//										'post_name' 						=> 		'Pages',
 		//										'menu_name' 						=> 		'Pages',
 		//										'capability' 						=> 		'edit_posts',
@@ -319,7 +322,10 @@ class MKDO_Admin extends MKDO_Class {
 		//										'remove_original_menu' 				=> 		TRUE,
 		//										'remove_original_sub_menu' 			=> 		FALSE,
 		//										'remove_original_sub_menu_parent' 	=> 		'',
+		//										'add_to_dashboard'					=> 		TRUE,
+		//										'add_to_dashboard_slug'				=> 		'mkdo_content_menu',
 		//									);
+		//	 - 'post_type' is the post_type you are adding
 		//	 - 'post_name' is the name of the page (if you are renaming the menu also change this)
 		//	 - 'menu_name' is the name of the menu (if you are renaming the mneuy also change this)
 		//	 - 'capability' is the access required to view the menu item
@@ -329,12 +335,21 @@ class MKDO_Admin extends MKDO_Class {
 		//	 - 'remove_original_menu' will remove the original menu item before adding it to the menu
 		//	 - 'remove_original_sub_menu' will remove the original sub menu item before adding it to the menu
 		//	 - 'remove_original_sub_menu_parent' the parent of the sub menu item that needs removing
+		//	 - 'add_to_dashboard' will add the menu item to a dashboard
+		//	 - 'add_to_dashboard_slug' the slug of the dashboard to add to
+		//	 
+		// - For more complex customisation of the admin page created by the menu copy the template in the 
+		//   /admin/partials/ folder in this plugin to your theme in one of these locations. Here you 
+		//   can alter the image path and CSS as required:
+		//   - /mkdo-admin/mkdo-content-menu.php
+		//   - /partials/mkdo-content-menu.php
 		if( get_option( 'mkdo_admin_add_mkdo_content_menu', TRUE ) === TRUE ) { 
 			$this->loader->add_action( 'admin_menu', $admin_menus, 'add_mkdo_content_menu', 9999 );
 			$this->loader->add_action( 'admin_menu', $admin_menus, 'add_mkdo_content_menu_items', 9999 );
 		}
 		
 		// Remove admin menus
+		// 
 		// - Use the filter 'mkdo_content_menu_remove_admin_menus' to add menu items to be removed
 		// - Each item in the filter is an array in the following format:
 		// 		$admin_menu[] 	= 	array( 
@@ -350,6 +365,7 @@ class MKDO_Admin extends MKDO_Class {
 		}
 
 		// Remove admin sub menus
+		// 
 		// - Use the filter 'mkdo_content_menu_remove_admin_sub_menus' to add sub menu items to be removed
 		// - Each item in the filter is an array in the following format:
 		// 		$admin_sub_menu[] 	= 	array(
