@@ -37,7 +37,7 @@ if ( ! defined( 'WPINC' ) ) {
  *
  * @since             	1.0.0
  */
-class MKDO_Admin {
+class MKDO_Admin extends MKDO_Class {
 
 	/**
 	 * The loader that's responsible for maintaining and registering all hooks that power
@@ -78,8 +78,7 @@ class MKDO_Admin {
 	 */
 	public function __construct( $instance, $version ) {
 
-		$this->instance = $instance;
-		$this->version 	= $version;
+		parent::__construct( $instance, $version );
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -106,52 +105,35 @@ class MKDO_Admin {
 	 */
 	private function load_dependencies() {
 
-		/**
-		 * The classes responsible for defining all actions that occur in the Dashboard.
-		 */
-		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-admin.php';
-		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-bar.php';
-		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-footer.php';
+		// Register Scripts
+		require_once plugin_dir_path( __FILE__ ) . 'admin/class-register-scripts-admin.php';
+		require_once plugin_dir_path( __FILE__ ) . 'public/class-register-scripts-public.php';
+
+		// Dashboard		
+		require_once plugin_dir_path( __FILE__ ) . 'admin/class-admin-bar.php';
+		require_once plugin_dir_path( __FILE__ ) . 'admin/class-admin-footer.php';
+		require_once plugin_dir_path( __FILE__ ) . 'admin/class-admin-menus.php';
+
 		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-dashboard.php';
-		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-menus.php';
+		
 		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-notices.php';
 
-		/**
-		 * The classes responsible for defining all actions that occur in user profiles.
-		 */
+		// Profiles
 		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-profile.php';
 
-		/**
-		 * The classes responsible for defining all the custom post types.
-		 */
-		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-cpt-posts.php';
-		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-cpt-pages.php';
+		// Custom post types
 
-		/**
-		 * The classes responsible for defining all the custom metaboxes.
-		 */
+		// Meta boxes
 		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-metaboxes.php';
 
-		/**
-		 * The classes responsible for defining all the custom metaboxes.
-		 */
-		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-columns.php';
-
-		/**
-		 * The classes responsible for defining all the taxonomies.
-		 */
+		// Taxonomies
 		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-taxonomies.php';
 
-		/**
-		 * The classes responsible for defining all the statuses.
-		 */
-		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-status.php';
+		// Columns
+		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-columns.php';
 
-		/**
-		 * The class responsible for defining all actions that occur in the public-facing
-		 * side of the site.
-		 */
-		require_once plugin_dir_path( __FILE__ ) . 'public/class-mkdo-admin-public.php';
+		// Statuses
+		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-status.php';
 
 		$this->loader = new MKDO_Loader();
 	}
@@ -183,135 +165,231 @@ class MKDO_Admin {
 	 */
 	private function define_admin_hooks() {
 
-		/**
-		 * Customisation
-		 *
-		 * Custom parameters for the various classes
-		 */
-		$custom_page_title_args = 	array();
-		$custom_post_title_args = 	array(
-										// 'name_singular' 	=> 'News',
-										// 'name_plural' 		=> 'News' 
-									);
-
-		$custom_menu_args 		=	array(
-										// 'posts'				=> $custom_post_title_args,
-										// 'pages'				=> $custom_page_title_args,
-									);
-
 		/** 
 		 * Classes
 		 *
 		 * Load the admin classes used in this Plugin
 		 */
-		$plugin_admin 			= new MKDO_Admin_Admin						( $this->get_instance(), $this->get_version() );
-		$admin_bar_admin		= new MKDO_Admin_bar						( $this->get_instance(), $this->get_version() );
-		$footer_admin			= new MKDO_Admin_Footer						( $this->get_instance(), $this->get_version() );
+		
+		$admin_scripts 			= new MKDO_Register_Scripts_Admin			( $this->get_instance(), $this->get_version() );
+		$admin_bar				= new MKDO_Admin_bar						( $this->get_instance(), $this->get_version() );
+		$admin_footer			= new MKDO_Admin_Footer						( $this->get_instance(), $this->get_version() );
+		$admin_menus			= new MKDO_Admin_Menus						( $this->get_instance(), $this->get_version() );
+		
 		$dashboard_admin		= new MKDO_Admin_Dashboard					( $this->get_instance(), $this->get_version() );
-		$menus_admin			= new MKDO_Admin_Menus						( $this->get_instance(), $this->get_version(), $custom_menu_args 			);
 		$notices_admin			= new MKDO_Admin_Notices					( $this->get_instance(), $this->get_version() );
 		$profile_admin			= new MKDO_Admin_Profile					( $this->get_instance(), $this->get_version() );
-		$cpt_posts				= new MKDO_Admin_CPT_Posts					( $this->get_instance(), $this->get_version(), $custom_post_title_args 	);
-		$cpt_pages				= new MKDO_Admin_CPT_Pages					( $this->get_instance(), $this->get_version(), $custom_page_title_args 	);
 		$metaboxes_admin		= new MKDO_Admin_Metaboxes					( $this->get_instance(), $this->get_version() );
 		$columns_admin			= new MKDO_Admin_Columns					( $this->get_instance(), $this->get_version() );
 		$taxonomies				= new MKDO_Admin_Taxonomies					( $this->get_instance(), $this->get_version() );
 		$status 				= new MKDO_Admin_Status						( $this->get_instance(), $this->get_version() );
 
 		/** 
-		 * Admin Bar 
-		 *
-		 * Removes the admin bar for all users
-		 * Removes the admin bar for non admins
-		 * Restricts access to the dashboard for non admins
-		 * Remove howdy message
-		 * Remove my sites
-		 * Remve WP logo
-		 * Remove site name
-		 * Remove WP SEO menu
-		 * Remove Comments
-		 * Remove +New
-		 * Remove updates
-		 * Remove search
-		 * Add custom admin logo
-		 * Add menu switcher
+		 * Scripts
 		 */
-		// $this->loader->add_action( 'init', 								$admin_bar_admin, 		'remove_admin_bar' 						);
-		// $this->loader->add_action( 'init', 								$admin_bar_admin, 		'remove_admin_bar_for_non_admins' 		);
-		// $this->loader->add_action( 'admin_init', 						$admin_bar_admin, 		'restrict_admin_access' 				);
-		$this->loader->add_action( 'wp_before_admin_bar_render', 		$admin_bar_admin, 		'remove_howdy' 							);
-		$this->loader->add_action( 'wp_before_admin_bar_render', 		$admin_bar_admin, 		'remove_my_sites' 						);
-		//$this->loader->add_action( 'wp_before_admin_bar_render', 		$admin_bar_admin, 		'remove_wp_logo' 						);
-		$this->loader->add_action( 'wp_before_admin_bar_render', 		$admin_bar_admin, 		'remove_site_name' 						);
-		$this->loader->add_action( 'wp_before_admin_bar_render', 		$admin_bar_admin, 		'remove_wp_seo_menu' 					);
-		$this->loader->add_action( 'wp_before_admin_bar_render', 		$admin_bar_admin, 		'remove_comments' 						);
-		$this->loader->add_action( 'wp_before_admin_bar_render', 		$admin_bar_admin, 		'remove_new_content' 					);
-		$this->loader->add_action( 'wp_before_admin_bar_render', 		$admin_bar_admin, 		'remove_updates' 						);
-		$this->loader->add_action( 'wp_before_admin_bar_render', 		$admin_bar_admin, 		'remove_search' 						);
 		
-		// To use a custom logo you must not use 'remove_wp_admin_logo'
-		// The CSS in this function will vary from stie to site
-		// For best results the logo should not be larger then 20px in height
-		//$this->loader->add_action( 'admin_head', 						$admin_bar_admin, 		'custom_admin_logo' 					);
+		// Enqueue the styles
+		if( get_option( 'mkdo_admin_enqueue_styles', TRUE ) === TRUE ) { 
+			$this->loader->add_action( 'admin_enqueue_scripts', $admin_scripts, 'enqueue_styles' );
+		}
 
-		$this->loader->add_action( 'wp_before_admin_bar_render', 		$admin_bar_admin, 		'add_menu_switcher' 					);
+		// Enqueue the scripts
+		if( get_option( 'mkdo_admin_enqueue_scripts', TRUE ) === TRUE ) { 
+			$this->loader->add_action( 'admin_enqueue_scripts', $admin_scripts, 'enqueue_scripts' );
+		}
+
+		/** 
+		 * Admin Bar
+		 */
+		
+		// Removes the admin bar for all users
+		if( get_option( 'mkdo_admin_remove_admin_bar', FALSE ) === TRUE ) { 
+			$this->loader->add_action( 'init', $admin_bar, 'remove_admin_bar' );
+		}
+
+		// Removes the admin bar for non admins
+		if( get_option( 'mkdo_admin_remove_admin_bar_non_admins', FALSE ) === TRUE ) { 
+			$this->loader->add_action( 'init', $admin_bar, 'remove_admin_bar_for_non_admins' );
+		}
+
+		// Restricts access to the dashboard for non admins
+		if( get_option( 'mkdo_admin_restrict_admin_access', FALSE ) === TRUE ) { 
+			$this->loader->add_action( 'admin_init', $admin_bar, 'restrict_admin_access' );
+		}
+
+		// Remove howdy message
+		if( get_option( 'mkdo_admin_remove_howdy', TRUE ) === TRUE ) { 
+			$this->loader->add_action( 'wp_before_admin_bar_render', $admin_bar, 'remove_howdy' );
+		}
+
+		// Remove my sites
+		if( get_option( 'mkdo_admin_remove_my_sites', TRUE ) === TRUE ) { 
+			$this->loader->add_action( 'wp_before_admin_bar_render', $admin_bar, 'remove_my_sites' );
+		}
+
+		// Remove my sites
+		if( get_option( 'mkdo_admin_remove_wp_logo', FALSE ) === TRUE ) { 
+			$this->loader->add_action( 'wp_before_admin_bar_render', $admin_bar, 'remove_wp_logo' );
+		}
+
+		// Remove site name
+		if( get_option( 'mkdo_admin_remove_site_name', TRUE ) === TRUE ) { 
+			$this->loader->add_action( 'wp_before_admin_bar_render', $admin_bar, 'remove_site_name' );
+		}
+
+		// Remove WP SEO menu
+		if( get_option( 'mkdo_admin_remove_wp_seo_menu', TRUE ) === TRUE ) { 
+			$this->loader->add_action( 'wp_before_admin_bar_render', $admin_bar, 'remove_wp_seo_menu' );
+		}
+
+		// Remove Comments
+		if( get_option( 'mkdo_admin_remove_comments', TRUE ) === TRUE ) { 
+			$this->loader->add_action( 'wp_before_admin_bar_render', $admin_bar, 'remove_comments' );
+		}
+
+		// Remove +New
+		if( get_option( 'mkdo_admin_remove_new_content', TRUE ) === TRUE ) { 
+			$this->loader->add_action( 'wp_before_admin_bar_render', $admin_bar, 'remove_new_content' );
+		}
+
+		// Remove updates
+		// - Does not remove updates for Super Users
+		if( get_option( 'mkdo_admin_remove_updates', TRUE ) === TRUE ) { 
+			$this->loader->add_action( 'wp_before_admin_bar_render', $admin_bar, 'remove_updates' );
+		}
+
+		// Remove search
+		if( get_option( 'mkdo_admin_remove_search', TRUE ) === TRUE ) { 
+			$this->loader->add_action( 'wp_before_admin_bar_render', $admin_bar, 'remove_search' );
+		}
+		
+		// Add custom admin logo
+		// - To use a custom logo you must not use 'remove_wp_admin_logo'
+		// - The CSS in this function will vary from stie to site
+		// - For best results the logo should not be larger then 20px in height
+		// - To make this work by default place an image 20x20px in your theme /img/ 
+		//   folder named 'admin-logo.php'
+		// - For more complex customisation copy the template in the /admin/partials/ folder in this plugin 
+		//   to your theme in one of these locations. Here you can alter the image path and CSS as required
+		//   - /mkdo-admin/custom-admin-logo.php
+		//   - /partials/custom-admin-logo.php
+		if( get_option( 'mkdo_admin_custom_admin_logo', FALSE ) === TRUE ) { 
+			$this->loader->add_action( 'admin_head', $admin_bar, 'custom_admin_logo' );
+		}
+
+		// Add menu switcher
+		if( get_option( 'mkdo_admin_add_menu_switcher', TRUE ) === TRUE ) { 
+			$this->loader->add_action( 'wp_before_admin_bar_render', $admin_bar, 'add_menu_switcher' );
+		}
 
 		/** 
 		 * Admin Footer
-		 *
-		 * Removes the admin footer message
-		 * Removes the WP version number
-		 * Add custom MKDO footer text
 		 */
-		$this->loader->add_filter( 'admin_footer_text', 				$footer_admin, 			'remove_admin_footer', 					9999	);
-		$this->loader->add_filter( 'update_footer', 					$footer_admin, 			'remove_admin_version', 				9999	);
-		//$this->loader->add_filter( 'admin_footer_text', 				$footer_admin, 			'add_mkdo_footer_text', 				9999	);
+		
+		// Removes the admin footer message
+		if( get_option( 'mkdo_admin_remove_admin_footer', TRUE ) === TRUE ) { 
+			$this->loader->add_action( 'admin_footer_text', $admin_footer, 'remove_admin_footer', 9999 );
+		}
 
-		/** 
-		 * Scripts
-		 *
-		 * Enqueue the styles
-		 * Enqueue the scripts
-		 */
-		$this->loader->add_action( 'admin_enqueue_scripts', 			$plugin_admin, 			'enqueue_styles' 						);
-		$this->loader->add_action( 'admin_enqueue_scripts', 			$plugin_admin, 			'enqueue_scripts' 						);
+		// Removes the WP version number
+		if( get_option( 'mkdo_admin_remove_admin_version', TRUE ) === TRUE ) { 
+			$this->loader->add_action( 'update_footer', $admin_footer, 'remove_admin_version', 9999 );
+		}
+
+		// Add custom footer text
+		// - Use the filter 'mkdo_footer_text' to add your own text
+		if( get_option( 'mkdo_admin_add_footer_text', TRUE ) === TRUE ) { 
+			$this->loader->add_action( 'admin_footer_text', $admin_footer, 'add_footer_text', 9999 );
+		}
 
 		/**
-		 * Dashboard
+		 * Menus
+		 */
+		
+		// Add custom menu
+		// - Use the filter ''mkdo_content_menu_add_menu_items' to add menu items
+		// - Each item in the filter is an array in the following format
+		// 		$mkdo_content_menus[] 	= 	array( 
+		//										'post_name' 						=> 		'Pages',
+		//										'menu_name' 						=> 		'Pages',
+		//										'capability' 						=> 		'edit_posts',
+		//										'function' 							=> 		defined('CMS_TPV_URL') ? 'edit.php?post_type=page&page=cms-tpv-page-page' : 'edit.php?post_type=page',
+		//										'admin_add'							=>		TRUE,
+		//										'mkdo_add'							=> 		TRUE,
+		//										'remove_original_menu' 				=> 		TRUE,
+		//										'remove_original_sub_menu' 			=> 		FALSE,
+		//										'remove_original_sub_menu_parent' 	=> 		'',
+		//									);
+		//	 - 'post_name' is the name of the page (if you are renaming the menu also change this)
+		//	 - 'menu_name' is the name of the menu (if you are renaming the mneuy also change this)
+		//	 - 'capability' is the access required to view the menu item
+		//	 - 'function' is the function or the URL that the menu item links to
+		//	 - 'admin_add' will add the item if the user is an administrator
+		//	 - 'mkdo_add' will add the item if the user is an MKDO admin
+		//	 - 'remove_original_menu' will remove the original menu item before adding it to the menu
+		//	 - 'remove_original_sub_menu' will remove the original sub menu item before adding it to the menu
+		//	 - 'remove_original_sub_menu_parent' the parent of the sub menu item that needs removing
+		if( get_option( 'mkdo_admin_add_mkdo_content_menu', TRUE ) === TRUE ) { 
+			$this->loader->add_action( 'admin_menu', $admin_menus, 'add_mkdo_content_menu', 9999 );
+			$this->loader->add_action( 'admin_menu', $admin_menus, 'add_mkdo_content_menu_items', 9999 );
+		}
+		
+		// Remove admin menus
+		// - Use the filter 'mkdo_content_menu_remove_admin_menus' to add menu items to be removed
+		// - Each item in the filter is an array in the following format:
+		// 		$admin_menu[] 	= 	array( 
+		// 								'menu' 			=> 		'edit.php',
+		// 								'admin_remove'	=>		TRUE,
+		// 								'mkdo_remove'	=> 		TRUE
+		// 							);
+		// 	  - 'menu' is the menu to remove
+		// 	  - 'admin_remove' will remove the item for admins
+		// 	  - 'mkdo_remove' will remove the item for super users
+		if( get_option( 'mkdo_admin_remove_admin_menus', TRUE ) === TRUE ) { 
+			$this->loader->add_action( 'admin_menu', $admin_menus, 'remove_admin_menus', 9999 );
+		}
+
+		// Remove admin sub menus
+		// - Use the filter 'mkdo_content_menu_remove_admin_sub_menus' to add sub menu items to be removed
+		// - Each item in the filter is an array in the following format:
+		// 		$admin_sub_menu[] 	= 	array(
+		// 								'parent' 		=> 		'themes.php',
+		//								'child' 		=> 		'theme-editor.php',
+		//								'admin_remove'	=>		TRUE,
+		//								'mkdo_remove'	=> 		FALSE
+		//							);
+		// 	  - 'parent' is the parent of the sub menu to remove						
+		// 	  - 'child' is the sub menu to remove
+		// 	  - 'admin_remove' will remove the item for admins
+		// 	  - 'mkdo_remove' will remove the item for super users
+		if( get_option( 'mkdo_admin_remove_admin_sub_menus', TRUE ) === TRUE ) { 
+			$this->loader->add_action( 'admin_menu', $admin_menus, 'remove_admin_sub_menus', 9999 );
+		}
+
+		// Rename Media Library to Assets Library
+		if( get_option( 'mkdo_admin_rename_media_library', FALSE ) === TRUE ) { 
+			$this->loader->add_action( 'admin_menu', 	$admin_menus,	'rename_mkdo_media_menu' 	);
+			$this->loader->add_filter( 'gettext', 		$admin_menus,	'rename_mkdo_media_page', 	10,	3 );
+		}
+		
+		/**
+		 * Dashboards
 		 *
 		 * Add custom dashboard
 		 * Add login redirect to custom dashboard
 		 * Add 'content' dashboard block
 		 * Add 'Profile' dashboard block
 		 * Add 'Comments' dashboard block (from content dashboard)
+		 * 
 		 */
-		$this->loader->add_action( 'admin_menu', 						$dashboard_admin, 		'add_mkdo_dashboard' 					);
-		$this->loader->add_action( 'login_redirect', 					$dashboard_admin, 		'login_redirect', 						9999, 3 );
-		$this->loader->add_action( 'mkdo_dashboard_blocks', 			$dashboard_admin, 		'add_content_block_to_mkdo_dashboard'	);
-		$this->loader->add_action( 'mkdo_dashboard_blocks', 			$dashboard_admin, 		'add_profile_block_to_mkdo_dashboard'	);
-		$this->loader->add_action( 'mkdo_dashboard_blocks', 			$menus_admin, 			'add_comments_to_mkdo_dashboard'		);
+		// $this->loader->add_action( 'admin_menu', 						$dashboard_admin, 		'add_mkdo_dashboard' 					);
+		// $this->loader->add_action( 'login_redirect', 					$dashboard_admin, 		'login_redirect', 						9999, 3 );
+		// $this->loader->add_action( 'mkdo_dashboard_blocks', 			$dashboard_admin, 		'add_content_block_to_mkdo_dashboard'	);
+		// $this->loader->add_action( 'mkdo_dashboard_blocks', 			$dashboard_admin, 		'add_profile_block_to_mkdo_dashboard'	);
+		// $this->loader->add_action( 'mkdo_dashboard_blocks', 			$admin_menus, 			'add_comments_to_mkdo_dashboard'		);
+		// $this->loader->add_action( 'mkdo_after_content_blocks', 		$admin_menus, 			'add_comments_to_mkdo_dashboard'		);
 
-		/**
-		 * Menu
-		 *
-		 * Remove admin menus
-		 * Remove admin sub menus
-		 * Add custom menu
-		 * Rename media menu
-		 * Rename media page
-		 * Add posts to menu
-		 * Add pages to menu
-		 * Add 'comments' to menu dashbaord
-		 */
-		$this->loader->add_action( 'admin_menu', 						$menus_admin, 			'remove_admin_menus', 					9999 );
-		$this->loader->add_action( 'admin_menu', 						$menus_admin, 			'remove_admin_sub_menus', 				9999 );
-		$this->loader->add_action( 'admin_menu', 						$menus_admin, 			'add_mkdo_content_menu', 				5 );
-		$this->loader->add_action( 'admin_menu', 						$menus_admin, 			'rename_mkdo_media_menu' 				);
-		$this->loader->add_filter( 'gettext', 							$menus_admin, 			'rename_mkdo_media_page', 				10,3);
-		$this->loader->add_action( 'admin_menu', 						$menus_admin, 			'add_posts_to_mkdo_content', 			9 );
-		$this->loader->add_action( 'admin_menu', 						$menus_admin, 			'add_pages_to_mkdo_content', 			9 );
-		$this->loader->add_action( 'mkdo_after_content_blocks', 		$menus_admin, 			'add_comments_to_mkdo_dashboard'		);
-		
+
 		/**
 		 * Admin notices
 		 *
@@ -336,15 +414,7 @@ class MKDO_Admin {
 		$this->loader->add_action( 'get_user_option_admin_color', 		$profile_admin, 		'force_user_color_scheme' 				);
 		$this->loader->add_action( 'user_has_cap', 						$profile_admin, 		'edit_user_capabilities' 				);
 
-		/** 
-		 * Post Types
-		 *
-		 * Add the post type to the admin menu
-		 */
-		if( class_exists( 'MKDO_Admin' ) ) {
-			$this->loader->add_filter( 'mkdo_content_menu', $cpt_posts, 'add_content_block' );
-			$this->loader->add_filter( 'mkdo_content_menu', $cpt_pages, 'add_content_block' );
-		}
+		
 
 		/** 
 		 * Metaboxes
@@ -383,21 +453,18 @@ class MKDO_Admin {
 		 * Override Edit Flow post list status disable
 		 * Add status to Edit Flow column
 		 */
-		$this->loader->add_action( 'init', 							$status, 				'add_archived_status' 					);
-		$this->loader->add_action( 'admin_footer-post.php',			$status, 				'make_archived_status_choosable' 		);
-		$this->loader->add_filter( 'display_post_states', 			$status, 				'add_archived_status_to_post_list'	 	);
-		//$this->loader->add_action( 'admin_enqueue_scripts', 		$status, 				'override_edit_flow_status', 			9999 );
-		$this->loader->add_action( 'manage_posts_custom_column', 	$status, 				'override_edit_flow_stauts_column'	 	);
-		$this->loader->add_action( 'manage_pages_custom_column', 	$status, 				'override_edit_flow_stauts_column'	 	);
+		// $this->loader->add_action( 'init', 							$status, 				'add_archived_status' 					);
+		// $this->loader->add_action( 'admin_footer-post.php',			$status, 				'make_archived_status_choosable' 		);
+		// $this->loader->add_filter( 'display_post_states', 			$status, 				'add_archived_status_to_post_list'	 	);
+		// //$this->loader->add_action( 'admin_enqueue_scripts', 		$status, 				'override_edit_flow_status', 			9999 );
+		// $this->loader->add_action( 'manage_posts_custom_column', 	$status, 				'override_edit_flow_stauts_column'	 	);
+		// $this->loader->add_action( 'manage_pages_custom_column', 	$status, 				'override_edit_flow_stauts_column'	 	);
 
-		// Add status to posts
-		$this->loader->add_filter( 'mkdo_custom_status_archived_filter', 	$cpt_posts, 	'post_type_filter' 						);
+		// // Add status to posts
+		// $this->loader->add_filter( 'mkdo_custom_status_archived_filter', 	$cpt_posts, 	'post_type_filter' 						);
 		
-		/**
-		 * Add actions from other hooks
-		 *
-		 * Register hooks from other plugins
-		 */
+
+		// Register hooks from other plugins
 		$this->loader->add_action( 'plugins_loaded', 		$this, 					'define_admin_dependancy_hooks' 		);
 	}
 
@@ -410,12 +477,12 @@ class MKDO_Admin {
 	 */
 	public function define_admin_dependancy_hooks() {
 		
-		if( class_exists( 'MKDO_Incidents' ) ) {
+		// if( class_exists( 'MKDO_Incidents' ) ) {
 
-			$cpt_incidents 			= new MKDO_Incidents_CPT_incidents				( $this->get_instance(), $this->get_version() );
+		// 	$cpt_incidents 			= new MKDO_Incidents_CPT_incidents				( $this->get_instance(), $this->get_version() );
 			
-			add_filter( 'mkdo_custom_status_archived_filter', array( $cpt_incidents, 'post_type_filter' ) );
-		}
+		// 	add_filter( 'mkdo_custom_status_archived_filter', array( $cpt_incidents, 'post_type_filter' ) );
+		// }
 	}
 
 	/**
@@ -427,10 +494,17 @@ class MKDO_Admin {
 	 */
 	private function define_public_hooks() {
 
-		// $plugin_public = new MKDO_Admin_Public( $this->get_instance(), $this->get_version() );
+		$public_scripts = new MKDO_Register_Scripts_Public( $this->get_instance(), $this->get_version() );
 
-		// $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
-		// $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+		// Enqueue the styles
+		if( get_option( 'mkdo_admin_enqueue_styles_public', FALSE ) === TRUE ) { 
+			$this->loader->add_action( 'wp_enqueue_scripts', $public_scripts, 'enqueue_styles' );
+		}
+
+		// Enqueue the scripts
+		if( get_option( 'mkdo_admin_enqueue_scripts_public', FALSE ) === TRUE ) { 
+			$this->loader->add_action( 'wp_enqueue_scripts', $public_scripts, 'enqueue_scripts' );
+		}
 
 	}
 

@@ -24,8 +24,8 @@ class MKDO_Admin_Bar extends MKDO_Class {
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
-	 * @var      string    $instance       The name of this plugin.
-	 * @var      string    $version    The version of this plugin.
+	 * @var      string    $instance       	The name of this plugin.
+	 * @var      string    $version    		The version of this plugin.
 	 */
 	public function __construct( $instance, $version ) {
 		parent::__construct( $instance, $version );
@@ -151,26 +151,22 @@ class MKDO_Admin_Bar extends MKDO_Class {
 	}
 
 	/**
-	 * Add custom logo to the admin bar // TODO: Make this into a template
+	 * Add custom logo to the admin bar
 	 */
 	public function custom_admin_logo() {
-		?>
-			<style type="text/css">
-				#wpadminbar .ab-icon, #wpadminbar .ab-item:before, 
-				#wpadminbar>#wp-toolbar>#wp-admin-bar-root-default .ab-icon { 
-					background-image: url(<?php echo get_bloginfo('stylesheet_directory'); ?>/img/admin-logo.png) !important; 
-					background-position: 0 6px;
-					background-repeat: no-repeat; !important;
-					width: 80px;
-				}
-				#wpadminbar>#wp-toolbar>#wp-admin-bar-root-default .ab-icon:before {
-					content: '';
-				}
-				#wpadminbar #wp-admin-bar-wp-logo.hover > .ab-item .ab-icon {
-					background-position: 0 0;
-				}
-			</style>
-		<?php
+		
+		$custom_admin_logo_css_path 	= 	dirname(__FILE__) . '/partials/custom-admin-logo.php';
+		$theme_path 					= 	get_stylesheet_directory() . '/mkdo-admin/custom-admin-logo.php';
+		$partials_path					= 	get_stylesheet_directory() . '/partials/custom-admin-logo.php';
+
+		if( file_exists( $theme_path ) ) {
+			$custom_admin_logo_css_path = 	$theme_path;
+		}
+		else if( file_exists( $partials_path ) ) { 
+			$custom_admin_logo_css_path =  	$partials_path;
+		}
+
+		include $custom_admin_logo_css_path;
 	}
 
 	/**

@@ -18,7 +18,7 @@
  * @subpackage MKDO_Admin/admin
  * @author     Make Do <hello@makedo.in>
  */
-class MKDO_Admin_Admin extends MKDO_Class {
+class MKDO_Register_Scripts_Admin extends MKDO_Class {
 
 	/**
 	 * Initialize the class and set its properties.
@@ -38,7 +38,7 @@ class MKDO_Admin_Admin extends MKDO_Class {
 	 */
 	public function enqueue_styles() {
 
-		wp_enqueue_style( $this->instance, plugin_dir_url( __FILE__ ) . 'css/mkdo-admin-admin.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->instance, plugin_dir_url( __FILE__ ) . 'css/mkdo-admin.css', array(), $this->version, 'all' );
 
 	}
 
@@ -49,7 +49,7 @@ class MKDO_Admin_Admin extends MKDO_Class {
 	 */
 	public function enqueue_scripts() {
 
-		wp_enqueue_script( $this->instance, plugin_dir_url( __FILE__ ) . 'js/mkdo-admin-admin.js', array( 'jquery' ), $this->version, TRUE );
+		wp_enqueue_script( $this->instance, plugin_dir_url( __FILE__ ) . 'js/mkdo-admin.js', array( 'jquery' ), $this->version, TRUE );
 
 	}
 }

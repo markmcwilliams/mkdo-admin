@@ -18,16 +18,7 @@
  * @subpackage MKDO_Admin/admin
  * @author     Make Do <hello@makedo.in>
  */
-class MKDO_Admin_Menus extends MKDO_Class {
-
-	/**
-	 * The arguments for the CPT
-	 *
-	 * @since    1.0.0
-	 * @access   protected
-	 * @var      array    $args    The arguments for the CPT.
-	 */
-	protected $args;
+class MKDO_Admin_Menus extends MKDO_Menu {
 
 	/**
 	 * Initialize the class and set its properties.
@@ -36,89 +27,108 @@ class MKDO_Admin_Menus extends MKDO_Class {
 	 * @var      string    $instance       The name of this plugin.
 	 * @var      string    $version    The version of this plugin.
 	 */
-	public function __construct( $instance, $version, $args = array() ) {
-		parent::__construct( $instance, $version );
-
-		add_action( 'parent_file', 	array( $this, 'correct_menu_hierarchy'), 9999 );
-		add_action( 'admin_head', 	array( $this, 'correct_sub_menu_hierarchy') );
+	public function __construct( $instance, $version ) {
 		
-		$this->args = $args;
-	}
 
-	/**
-	 * Remove admin menus
-	 */
-	public function remove_admin_menus() {
+		$args 								= 	array(
+														'page_title' 			=> 	'Content',
+														'menu_title' 			=> 	'Content',
+														'capibility' 			=> 	'edit_posts',
+														'slug' 					=> 	'mkdo_content_menu',
+														'function'				=> 	array( $this, 'mkdo_content_output'),
+														'icon' 					=> 	'dashicons-admin-page',
+														'position' 				=> 	'26',
+														'add_menus'				=> 	array(
+																						array( 
+																							'post_name' 						=> 		'Posts',
+																							'menu_name' 						=> 		'Posts',
+																							'capability' 						=> 		'edit_posts',
+																							'function' 							=> 		'edit.php',
+																							'admin_add'							=>		TRUE,
+																							'mkdo_add'							=> 		TRUE,
+																							'remove_original_menu' 				=> 		TRUE,
+																							'remove_original_sub_menu' 			=> 		FALSE,
+																							'remove_original_sub_menu_parent' 	=> 		'',
+																						),
+																						array( 
+																							'post_name' 						=> 		'Pages',
+																							'menu_name' 						=> 		'Pages',
+																							'capability' 						=> 		'edit_posts',
+																							'function' 							=> 		defined('CMS_TPV_URL') ? 'edit.php?post_type=page&page=cms-tpv-page-page' : 'edit.php?post_type=page',
+																							'admin_add'							=>		TRUE,
+																							'mkdo_add'							=> 		TRUE,
+																							'remove_original_menu' 				=> 		TRUE,
+																							'remove_original_sub_menu' 			=> 		FALSE,
+																							'remove_original_sub_menu_parent' 	=> 		'',
+																						),
+																					),
+														'remove_menus'			=> 	array(
+																						array( 
+																							'menu' 			=> 		'edit-comments.php',
+																							'admin_remove'	=>		TRUE,
+																							'mkdo_remove'	=> 		TRUE
+																						),
+																						array( 
+																							'menu' 			=> 		'index.php',
+																							'admin_remove'	=>		TRUE,
+																							'mkdo_remove'	=> 		FALSE
+																						),
+																						array( 
+																							'menu' 			=> 		'seperator1',
+																							'admin_remove'	=>		TRUE,
+																							'mkdo_remove'	=> 		FALSE
+																						),
+																						array( 
+																							'menu' 			=> 		'tools.php',
+																							'admin_remove'	=>		TRUE,
+																							'mkdo_remove'	=> 		FALSE
+																						),
+																						array( 
+																							'menu' 			=> 		'options-general.php',
+																							'admin_remove'	=>		TRUE,
+																							'mkdo_remove'	=> 		FALSE
+																						),
+																						array( 
+																							'menu' 			=> 		'plugins.php',
+																							'admin_remove'	=>		TRUE,
+																							'mkdo_remove'	=> 		FALSE
+																						),
+																						array( 
+																							'menu' 			=> 		'wpseo_dashboard',
+																							'admin_remove'	=>		TRUE,
+																							'mkdo_remove'	=> 		FALSE
+																						),
+																					),
+														'remove_sub_menus'		=> 	array(
+																						array(
+																							'parent' 		=> 		'themes.php',
+																							'child' 		=> 		'themes.php',
+																							'admin_remove'	=>		TRUE,
+																							'mkdo_remove'	=> 		FALSE
+																						),
+																						array(
+																							'parent' 		=> 		'themes.php',
+																							'child' 		=> 		'customize.php',
+																							'admin_remove'	=>		TRUE,
+																							'mkdo_remove'	=> 		FALSE
+																						),
+																						array(
+																							'parent' 		=> 		'themes.php',
+																							'child' 		=> 		'theme-editor.php',
+																							'admin_remove'	=>		TRUE,
+																							'mkdo_remove'	=> 		FALSE
+																						),
+																					),
+													);
 
-		$menus = array();
-
-		$menus[] = 'edit.php';
-		$menus[] = 'edit.php?post_type=page';
-		$menus[] = 'edit-comments.php';
-		//$menus[] = 'upload.php';
-
-		if( ! MKDO_Helper_User::is_mkdo_user() ) {
-
-			$menus[] = 'index.php';
-			$menus[] = 'seperator1';
-
-			//if( ! current_user_can('manage_options') ) {
-				$menus[] = 'tools.php';
-				$menus[] = 'options-general.php';
-				$menus[] = 'plugins.php';
-				$menus[] = 'wpseo_dashboard';
-				//$menus[] = 'themes.php';
-			//}
-		}
-
-		$remove_menu_items = apply_filters(
-			'mkdo_remove_admin_menus',
-			$menus
-		);
-
-		foreach( $remove_menu_items as $remove_menu_item ) {
-			remove_menu_page( $remove_menu_item );
-		}
-	}
-
-	/**
-	 * Remove admin sub menus
-	 */
-	public function remove_admin_sub_menus() {
-
-		$menus = array();
-
-		if( ! MKDO_Helper_User::is_mkdo_user() ) {
-
-			$menus[] = 	array(
-							'parent' 	=> 'themes.php',
-							'child' 	=> 'themes.php',
-						);
-			$menus[] = 	array(
-							'parent' 	=> 'themes.php',
-							'child' 	=> 'customize.php',
-						);
-			$menus[] = 	array(
-							'parent' 	=> 'themes.php',
-							'child' 	=> 'theme-editor.php',
-						);
-		}
-
-		$remove_menu_items = apply_filters(
-			'mkdo_remove_admin_sub_menus',
-			$menus
-		);
-
-		foreach( $remove_menu_items as $remove_menu_item ) {
-			remove_submenu_page( $remove_menu_item[ 'parent'], $remove_menu_item[ 'child' ] );
-		}
-
+		parent::__construct( $instance, $version, $args );
+	
 	}
 
 	/**
 	 * Rename media menu
 	 */
-	public function rename_mkdo_media_menu() {
+	public function rename_media_menu() {
 	
 		global $menu;
 		
@@ -128,7 +138,7 @@ class MKDO_Admin_Menus extends MKDO_Class {
 	/**
 	 * Rename media menu
 	 */
-	public function rename_mkdo_media_page( $translation, $text, $domain )
+	public function rename_media_page( $translation, $text, $domain )
 	{
 	    if ( 'default' == $domain and 'Media Library' == $text )
 	    {
@@ -137,23 +147,6 @@ class MKDO_Admin_Menus extends MKDO_Class {
 	        return 'Assets Library';
 	    }
 	    return $translation;
-	}
-
-	/**
-	 * Add admin menu
-	 */
-	public function add_mkdo_content_menu() {
-	
-		/* add the main page for wpbroadbean info */
-		add_menu_page(
-			'Content',
-			'Content',
-			'edit_posts',
-			'mkdo_content_menu',
-			array( $this, 'mkdo_content_output'),
-			'dashicons-admin-page',
-			'26'
-		);
 	}
 
 	/**
@@ -322,138 +315,18 @@ class MKDO_Admin_Menus extends MKDO_Class {
 	}
 
 	/**
-	 * Add pages to the menu
-	 */
-	public function add_posts_to_mkdo_content() {
-
-		$post_name = ( isset( $this->args['posts'] )  && isset( $this->args['posts']['name_plural'] ) ) ? $this->args['posts']['name_plural'] : 'Posts';
-
-		add_submenu_page(
-			'mkdo_content_menu',
-			$post_name,
-			$post_name,
-			'edit_posts',
-			'edit.php'
-		);
-	}
-
-	/**
-	 * Add posts to the menu
-	 */
-	public function add_pages_to_mkdo_content() {
-		
-		$page_name = ( isset( $this->args['pages'] ) && isset( $this->args['pages']['name_plural'] ) ) ? $this->args['pages']['name_plural'] : 'Pages';
-
-		if ( class_exists('sc_bulk_page_creator') ) {
-
-			add_submenu_page(
-				'mkdo_content_menu',
-				$page_name,
-				$page_name,
-				'edit_posts',
-				'edit.php?post_type=page&page=cms-tpv-page-page'
-			);
-
-		}
-		else {
-			add_submenu_page(
-				'mkdo_content_menu',
-				$page_name,
-				$page_name,
-				'edit_posts',
-				'edit.php?post_type=page'
-			);
-		}		
-	}
-
-	/**
-	 * Correct the heirachy
-	 */
-	public function correct_menu_hierarchy( $parent_file ) {
-	
-		global $current_screen;
-		global $submenu;
-
-		$pages 	= array();
-		$parent = 'mkdo_content_menu' ;
-		
-		if ( is_array( $submenu ) && isset( $submenu[$parent] ) ) {
-
-			foreach ( (array) $submenu[$parent] as $item) {
-				if ( $parent == $item[2] || $parent == $item[2] )
-						continue;
-				if ( current_user_can($item[1]) ) {
-					$menu_file = $item[2];
-					if ( false !== ( $pos = strpos( $menu_file, '?' ) ) )
-						$menu_file = substr( $menu_file, 0, $pos );
-					if ( file_exists( ABSPATH . "wp-admin/$menu_file" ) ) {
-						$pages[] = $item[0];
-					} else {
-						$pages[] = $item[0];
-					}
-				}
-			}
-		}
-
-		$post_type = get_post_type_object( $current_screen->post_type );
-		
-		if( isset( $post_type->labels ) && isset( $post_type->labels->name ) ) {
-			$post_type = $post_type->labels->name;
-		}
-		
-
-		if( $post_type == 'Posts' && isset( $this->args['posts'] )  && isset( $this->args['posts']['name_plural'] ) ) {
-			$post_type = $this->args['posts']['name_plural'];
-		}
-
-		if( $post_type == 'Pages' && isset( $this->args['pages'] )  && isset( $this->args['pages']['name_plural'] ) ) {
-			$post_type = $this->args['pages']['name_plural'];
-		}
-		
-		/* get the base of the current screen */
-		$screenbase = $current_screen->base;
-
-		/* if this is the edit.php base */
-		if( $screenbase == 'edit' || ( $screenbase == 'post' && in_array( $post_type, $pages ) ) ) {
-
-			/* set the parent file slug to the custom content page */
-			$parent_file = 'mkdo_content_menu';
-			
-		}
-
-		if( class_exists('sc_bulk_page_creator') && $screenbase == 'pages_page_cms-tpv-page-page' ) {
-			$parent_file = 'mkdo_content_menu';
-		}
-		
-		/* return the new parent file */	
-		return $parent_file;
-	}
-
-	/**
-	 * Correct the heirachy
-	 */
-	public function correct_sub_menu_hierarchy() {
-		global $submenu;
-		
-		foreach( $submenu['edit.php?post_type=page'] as $key=>$smenu ) {
-			$submenu['edit.php?post_type=page'][$key][2] = $smenu[2] . '&post_type=page';
-		}
-
-	}
-
-	/**
 	 * Add 'Comments' to the menu dashboard
 	 */
 	public function add_comments_to_mkdo_dashboard() {
-		if ( current_user_can('moderate_comments') ) {
-			//if( MKDO_Helper_User::is_mkdo_user() ) {
-				wp_add_dashboard_widget(
-					'comments_dash_widget',
-					'<span class="mkdo-block-title dashicons-before dashicons-admin-comments"></span> Comments',
-					array( $this, 'render_mkdo_dashboard_comments' )
-				);
-			//}
-		}
+	// 	if ( current_user_can('moderate_comments') ) {
+	// 		//if( MKDO_Helper_User::is_mkdo_user() ) {
+	// 			wp_add_dashboard_widget(
+	// 				'comments_dash_widget',
+	// 				'<span class="mkdo-block-title dashicons-before dashicons-admin-comments"></span> Comments',
+	// 				array( $this, 'render_mkdo_dashboard_comments' )
+	// 			);
+	// 		//}
+	// 	}
 	}
 
 	/**
@@ -463,7 +336,7 @@ class MKDO_Admin_Menus extends MKDO_Class {
 													
 		?>
 
-		<div>
+		<!-- <div>
 			
 			<p><a class="button button-primary" href="edit-comments.php">Manage</a></p>
 
@@ -476,7 +349,7 @@ class MKDO_Admin_Menus extends MKDO_Class {
 			
 			<p class="footer-button"><a class="button" href="edit-comments.php">Edit / Manage Comments</a></p>
 			
-		</div>
+		</div> -->
 		
 		<?php
 	}

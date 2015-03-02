@@ -48,7 +48,13 @@ class MKDO_Admin_Footer extends MKDO_Class {
 	/**
 	 * Add custom footer text
 	 */
-	public function add_mkdo_footer_text() {
-		return 'Site created by <a href="http://makedo.in" target="_blank">Make Do</a> using <a href="http://wordpress.org" target="_blank">WordPress</a>';
+	public function add_footer_text() {
+
+		$footer_text = 	apply_filters(
+							'mkdo_footer_text',
+							'Site created by <a href="http://makedo.in" target="_blank">Make Do</a> using <a href="http://wordpress.org" target="_blank">WordPress</a>'
+						);
+
+		return $footer_text;
 	}
 }

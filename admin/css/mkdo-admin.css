@@ -2,10 +2,13 @@
  * All of the CSS for your dashboard-specific functionality should be
  * included in this file.
  */
+
+ /* Use FontAwesome */
  .dashicons-before.fa:before {
  	font-family: FontAwesome !important;
  }
 
+ /* Hide the second widget box on the dashboard */
  .toplevel_page_mkdo_dashboard #dashboard-widgets-wrap #dashboard-widgets .postbox-container #side-sortables,
  .toplevel_page_mkdo_content_menu #dashboard-widgets-wrap #dashboard-widgets .postbox-container #side-sortables
  {
