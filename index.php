@@ -116,24 +116,23 @@ class MKDO_Admin extends MKDO_Class {
 		require_once plugin_dir_path( __FILE__ ) . 'admin/class-admin-footer.php';
 		require_once plugin_dir_path( __FILE__ ) . 'admin/class-admin-menus.php';
 		require_once plugin_dir_path( __FILE__ ) . 'admin/class-dashboard.php';
-		
-		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-notices.php';
+		require_once plugin_dir_path( __FILE__ ) . 'admin/class-notices.php';
 
 		// Content Blocks
 		require_once plugin_dir_path( __FILE__ ) . 'admin/class-content-blocks.php';
 
 		// Profiles
-		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-profile.php';
+		require_once plugin_dir_path( __FILE__ ) . 'admin/class-admin-profile.php';
 
 		// Custom post types
 
 		// Meta boxes
-		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-metaboxes.php';
+		require_once plugin_dir_path( __FILE__ ) . 'admin/class-metaboxes.php';
 
 		// Taxonomies
 
 		// Columns
-		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-columns.php';
+		require_once plugin_dir_path( __FILE__ ) . 'admin/class-columns.php';
 
 		// Status
 
@@ -177,14 +176,12 @@ class MKDO_Admin extends MKDO_Class {
 		$admin_bar				= new MKDO_Admin_bar						( $this->get_instance(), $this->get_version() );
 		$admin_footer			= new MKDO_Admin_Footer						( $this->get_instance(), $this->get_version() );
 		$admin_menus			= new MKDO_Admin_Menus						( $this->get_instance(), $this->get_version() );
-
 		$content_blocks			= new MKDO_Content_Blocks					( $this->get_instance(), $this->get_version() );
-		
 		$dashboard				= new MKDO_Admin_Dashboard					( $this->get_instance(), $this->get_version() );
-		$notices_admin			= new MKDO_Admin_Notices					( $this->get_instance(), $this->get_version() );
-		$profile_admin			= new MKDO_Admin_Profile					( $this->get_instance(), $this->get_version() );
-		$metaboxes_admin		= new MKDO_Admin_Metaboxes					( $this->get_instance(), $this->get_version() );
-		$columns_admin			= new MKDO_Admin_Columns					( $this->get_instance(), $this->get_version() );
+		$notices				= new MKDO_Notices							( $this->get_instance(), $this->get_version() );
+		$admin_profile			= new MKDO_Admin_Profile					( $this->get_instance(), $this->get_version() );
+		$metaboxes				= new MKDO_Metaboxes						( $this->get_instance(), $this->get_version() );
+		$columns				= new MKDO_Columns							( $this->get_instance(), $this->get_version() );
 
 		/** 
 		 * Scripts
@@ -313,6 +310,7 @@ class MKDO_Admin extends MKDO_Class {
 		// 
 		// - Use the filter ''mkdo_content_menu_add_menu_items' to add menu items
 		// - Each item in the filter is an array in the following format
+		// 
 		// 		$mkdo_content_menus[] 	= 	array( 
 		// 										'post_type'							=>		'page',
 		//										'post_name' 						=> 		'Pages',
@@ -329,6 +327,7 @@ class MKDO_Admin extends MKDO_Class {
 		//										'add_to_dashboard'					=> 		TRUE,
 		//										'add_to_dashboard_slug'				=> 		'mkdo_content_menu',
 		//									);
+		//									
 		//	 - 'post_type' is the post_type you are adding
 		//	 - 'post_name' is the name of the page (if you are renaming the menu also change this)
 		//	 - 'menu_name' is the name of the menu (if you are renaming the mneuy also change this)
@@ -370,7 +369,9 @@ class MKDO_Admin extends MKDO_Class {
 		//     			
 		//     			return $blocks;
 		//     		}
+		//     		
 		//   - When adding a custom post type using the MKDO Objects framework, simply add the following line of code:
+		//   
 		//   		if( class_exists( 'MKDO_Admin' ) ) {
 		// 				$this->loader->add_filter( 'mkdo_content_menu_blocks', $my_post_type_class, 'add_content_block' );
 		// 			}
@@ -384,11 +385,13 @@ class MKDO_Admin extends MKDO_Class {
 		// 
 		// - Use the filter 'mkdo_content_menu_remove_admin_menus' to add menu items to be removed
 		// - Each item in the filter is an array in the following format:
+		// 
 		// 		$admin_menu[] 	= 	array( 
 		// 								'menu' 			=> 		'edit.php',
 		// 								'admin_remove'	=>		TRUE,
 		// 								'mkdo_remove'	=> 		TRUE
 		// 							);
+		// 							
 		// 	  - 'menu' is the menu to remove
 		// 	  - 'admin_remove' will remove the item for admins
 		// 	  - 'mkdo_remove' will remove the item for super users
@@ -400,12 +403,14 @@ class MKDO_Admin extends MKDO_Class {
 		// 
 		// - Use the filter 'mkdo_content_menu_remove_admin_sub_menus' to add sub menu items to be removed
 		// - Each item in the filter is an array in the following format:
+		// 
 		// 		$admin_sub_menu[] 	= 	array(
 		// 								'parent' 		=> 		'themes.php',
 		//								'child' 		=> 		'theme-editor.php',
 		//								'admin_remove'	=>		TRUE,
 		//								'mkdo_remove'	=> 		FALSE
 		//							);
+		//							
 		// 	  - 'parent' is the parent of the sub menu to remove						
 		// 	  - 'child' is the sub menu to remove
 		// 	  - 'admin_remove' will remove the item for admins
@@ -416,18 +421,39 @@ class MKDO_Admin extends MKDO_Class {
 
 		// Rename Media Library to Assets Library
 		if( get_option( 'mkdo_admin_rename_media_library', FALSE ) === TRUE ) { 
-			$this->loader->add_action( 'admin_menu', 	$admin_menus,	'rename_mkdo_media_menu' 	);
-			$this->loader->add_filter( 'gettext', 		$admin_menus,	'rename_mkdo_media_page', 	10,	3 );
+			$this->loader->add_action( 'admin_menu', 	$admin_menus,	'rename_media_menu' 	);
+			$this->loader->add_filter( 'gettext', 		$admin_menus,	'rename_media_page', 	10,	3 );
 		}
 		
 		/**
 		 * Dashboards
 		 */
 		
-		// Add and redirect to custom dashboard
-		if( get_option( 'mkdo_admin_show_mkdo_dashboard', TRUE ) === TRUE ) { 
+		// Add and redirect to custom dashboard (non super user only)
+		if( get_option( 'mkdo_admin_show_mkdo_dashboard', FALSE ) === TRUE ) { 
 			$this->loader->add_action( 'admin_menu', 		$dashboard, 	'add_menu', 			9999 	);
 			$this->loader->add_action( 'login_redirect', 	$dashboard,		'login_redirect', 		9999, 	3 	);
+			$this->loader->add_action( 'admin_menu', 		$dashboard, 	'remove_admin_menus', 	9999 	);
+		}
+
+		// Add and redirect to custom dashboard (all users)
+		if( get_option( 'mkdo_admin_show_mkdo_dashboard_all', TRUE ) === TRUE ) { 
+			$this->loader->add_action( 'admin_menu', 		$dashboard, 	'add_menu_all', 		9999 	);
+			$this->loader->add_action( 'login_redirect', 	$dashboard,		'login_redirect_all', 	9999, 	3 	);
+			
+			// Make sure the original dash menu is removed for MKDO users
+			add_filter( 'mkdo_dashboard_remove_admin_menus', function( $admin_menu ){
+
+				foreach( $admin_menu as &$menu ) {
+					if( $menu['menu'] == 'index.php' ) {
+						$menu['mkdo_remove'] = TRUE;
+					}
+				}
+				return $admin_menu;
+
+			}, 9999 );
+
+			$this->loader->add_action( 'admin_menu', 		$dashboard, 	'remove_admin_menus', 	9999 	);
 		}
 
 		/**
@@ -456,58 +482,132 @@ class MKDO_Admin extends MKDO_Class {
 
 		/**
 		 * Admin notices
-		 *
-		 * Show taxonomies of posts
 		 */
-		$this->loader->add_action( 'all_admin_notices', 				$notices_admin, 		'admin_notices' 						);
+		
+		// Show Taxonomies at the top of the post
+		if( get_option( 'mkdo_admin_show_taxonomy_admin_notices', TRUE ) === TRUE ) { 
+			$this->loader->add_action( 'all_admin_notices', 				$notices, 		'show_taxonomy_admin_notices' 						);
+		}
+
+		// Show Tree Page View switcher as a notice at the top of the post
+		if( get_option( 'mkdo_admin_show_tree_page_view_switcher', TRUE ) === TRUE ) { 
+			$this->loader->add_action( 'all_admin_notices', 				$notices, 		'show_tree_page_view_switcher' 						);
+		}
 
 		/**
 		 * Profile
-		 *
-		 * Add MKDO user checkbox
-		 * Save user checkbox data
-		 * Save user checkbox data
-		 * Remove colour scheme picker
-		 * Force colour scheme
-		 * Change user permissions
 		 */
-		$this->loader->add_action( 'personal_options', 					$profile_admin, 		'add_mkdo_user_profile_field' 			);
-		$this->loader->add_action( 'personal_options_update', 			$profile_admin, 		'save_mkdo_user_profile_field_data' 	);
-		$this->loader->add_action( 'edit_user_profile_update', 			$profile_admin, 		'save_mkdo_user_profile_field_data' 	);
-		$this->loader->add_action( 'admin_init', 						$profile_admin, 		'remove_admin_color_schemes' 			);
-		$this->loader->add_action( 'get_user_option_admin_color', 		$profile_admin, 		'force_user_color_scheme' 				);
-		$this->loader->add_action( 'user_has_cap', 						$profile_admin, 		'edit_user_capabilities' 				);
+		
+		// Add MKDO user checkbox
+		if( get_option( 'mkdo_admin_add_mkdo_user_profile_field', TRUE ) === TRUE ) { 
+			$this->loader->add_action( 'personal_options', 			$admin_profile, 'add_mkdo_user_profile_field' 		);
+			$this->loader->add_action( 'personal_options_update', 	$admin_profile, 'save_mkdo_user_profile_field_data' );
+			$this->loader->add_action( 'edit_user_profile_update', 	$admin_profile, 'save_mkdo_user_profile_field_data' );
+		}
+
+		// Force colour scheme
+		if( get_option( 'mkdo_admin_force_user_color_scheme', TRUE ) === TRUE ) { 
+			$this->loader->add_action( 'admin_init',					$admin_profile, 	'remove_admin_color_schemes'	);
+			$this->loader->add_action( 'get_user_option_admin_color', 	$admin_profile, 	'force_user_color_scheme' 		);
+		}
+
+		// Prevent admins from making system and plugin updates
+		if( get_option( 'mkdo_admin_edit_admin_capabilities', TRUE ) === TRUE ) { 
+			$this->loader->add_action( 'user_has_cap',  $admin_profile, 'edit_admin_capabilities' );
+		}
 
 		/** 
 		 * Metaboxes
-		 *
-		 * Remove the metaboxes
 		 */
-		$this->loader->add_action( 'do_meta_boxes', 			$metaboxes_admin, 		'remove_metaboxes' 						);
-		$this->loader->add_action( 'default_hidden_meta_boxes', $metaboxes_admin, 		'hide_metaboxes', 						10, 2 );
+		
+		// Remove the metaboxes (for all but mkdo users )
+		// 
+		// To remove metaboxes you can edit the filter 'mkdo_remove_metaboxes'. Here you can 
+		// add arrays of the slugs you wish to hide in the following format:
+		// 
+		// 		$hidden_metabox[] = array(
+		// 								'id' 		=> 'postcustom',
+		// 								'page' 		=> array('post','page'),
+		// 								'context' 	=> 'normal'
+		// 							);
+		// 
+		// 'id' is the slug of the metabox you want to remove
+		// 'page' is an array of the post_types it should be removed from
+		// 'context' is the position the metabox should be removed from
+		if( get_option( 'mkdo_admin_remove_metaboxes', FALSE ) === TRUE ) { 
+			$this->loader->add_action( 'do_meta_boxes', $metaboxes, 'remove_metaboxes' );
+		}
+		
+		// Hide the metaboxes
+		// 
+		// To hide metaboxes you can edit the filter 'mkdo_hide_metaboxes'. Here you can just 
+		// list the metabox slugs you wish to hide. Eg, the default hidden metaboxes are:
+		// 
+		// - 'postcustom',
+		// - 'commentsdiv',
+		// - 'commentstatusdiv',
+		// - 'slugdiv',
+		// - 'trackbacksdiv',
+		// - 'revisionsdiv',
+		// - 'tagsdiv-post_tag',
+		// - 'authordiv',
+		// - 'wpseo_meta',
+		// - 'relevanssi_hidebox'
+		// 
+		// By default it will remove the metaboxes from all posts. If you want to do a custom hide
+		// Then you will need to write a new method hooking into the 'default_hidden_meta_boxes' action
+		if( get_option( 'mkdo_admin_hide_metaboxes', TRUE ) === TRUE ) { 
+			$this->loader->add_action( 'default_hidden_meta_boxes', $metaboxes, 'hide_metaboxes', 10, 2 );
+		}
 
 		/** 
 		 * Columns
-		 *
-		 * Remove the columns
 		 */
-		$this->loader->add_filter( 'init', 					$columns_admin, 		'remove_custom_post_columns', 			9998, 1 );
-		$this->loader->add_action( 'parse_request', 		$columns_admin, 		'hide_columns'							);
-		$this->loader->add_filter( 'admin_init', 			$columns_admin, 		'remove_column_filters', 				9999 );
-
-		// Register hooks from other plugins
-		$this->loader->add_action( 'plugins_loaded', 		$this, 					'define_admin_dependancy_hooks' 		);
-	}
-
-	/**
-	 * Register all of the hooks related to the dashboard functionality
-	 * of the plugin that are dependant on other plugins
-	 *
-	 * @since    1.0.0
-	 * @access   public
-	 */
-	public function define_admin_dependancy_hooks() {
 		
+		// Remove columns
+		// 
+		// You can add columns to be removed by using the filter 'mkdo_edit_columns', you will need to use the
+		// ID of the column you want deleting eg. 'comments'.
+		// 
+		// By default the column is removed from all posts. If you want to do a custom remove you will need to 
+		// create a custom function by hooking into the 'init' action.
+		if( get_option( 'mkdo_admin_remove_columns', FALSE ) === TRUE ) { 
+			$this->loader->add_filter( 'init', $columns, 'remove_custom_post_columns', 9998, 1 );
+		}
+		
+		// Hide columns
+		// 
+		// Columns will be hidden everytime a user logs in (cannot be set perminantly hidden like metaboxes).
+		// You can edit whats hidden with the filter 'mkdo_hide_columns'. The default hidden columns are:
+		// 
+		// - 'comments',
+		// - 'tags',
+		// - 'wpseo-score',
+		// - 'wpseo-title',
+		// - 'wpseo-metadesc',
+		// - 'wpseo-focuskw',
+		// - 'google_last30',
+		// - 'twitter_shares',
+		// - 'linkedin_shares',
+		// - 'facebook_likes',
+		// - 'facebook_shares',
+		// - 'total_shares',
+		// - 'decay_views',
+		// - 'decay_shares',
+		// 
+		// By default it will remove the columns from all posts. If you want to do a custom hide you will need
+		// to write a new method hooking into the 'wp_login' action.
+		if( get_option( 'mkdo_admin_hide_columns', TRUE ) === TRUE ) { 
+			$this->loader->add_action( 'wp_login', $columns, 'hide_columns', 10, 2 );
+		}
+
+		// Remove column filters
+		// 
+		// At the moment this filter is hardwired to remove the Yoast posts_filter_dropdown, however it may get
+		// expanded in the future.
+		if( get_option( 'mkdo_admin_remove_column_filters', TRUE ) === TRUE ) { 
+			$this->loader->add_filter( 'admin_init', $columns, 'remove_column_filters', 9999 );
+		}
 	}
 
 	/**

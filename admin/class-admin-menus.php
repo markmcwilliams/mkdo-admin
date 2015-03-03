@@ -79,11 +79,6 @@ class MKDO_Admin_Menus extends MKDO_Menu {
 																							'mkdo_remove'	=> 		TRUE
 																						),
 																						array( 
-																							'menu' 			=> 		'index.php',
-																							'admin_remove'	=>		TRUE,
-																							'mkdo_remove'	=> 		FALSE
-																						),
-																						array( 
 																							'menu' 			=> 		'seperator1',
 																							'admin_remove'	=>		TRUE,
 																							'mkdo_remove'	=> 		FALSE

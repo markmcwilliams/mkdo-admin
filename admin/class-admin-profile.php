@@ -36,7 +36,7 @@ class MKDO_Admin_Profile extends MKDO_Class {
 	 */
 	public function add_mkdo_user_profile_field( $user ) {
 	
-		/* bail out early if user is not an admin */
+		// Bail out early if user is not a super user
 		if ( ! MKDO_Helper_User::is_mkdo_user() )
 			return false;
 			
@@ -89,11 +89,7 @@ class MKDO_Admin_Profile extends MKDO_Class {
 	 * Remove admin colour scheme
 	 */
 	public function remove_admin_color_schemes() {
-
-		if( ! MKDO_Helper_User::is_mkdo_user() ) {
-			remove_action( 'admin_color_scheme_picker', 'admin_color_scheme_picker' );
-		}
-		
+		remove_action( 'admin_color_scheme_picker', 'admin_color_scheme_picker' );
 	}
 
 	/**
@@ -109,7 +105,7 @@ class MKDO_Admin_Profile extends MKDO_Class {
 		if ( MKDO_Helper_User::is_mkdo_user() ) {
 			$color_scheme 	= 'sunrise';
 		} 
-		else if( in_array( 'administrator', 		$roles) ) {
+		else if( in_array( 'administrator', $roles) ) {
 			$color_scheme 	= 'ectoplasm';
 		}
 		else if( in_array( 'editor', 		$roles) ) {
@@ -131,7 +127,7 @@ class MKDO_Admin_Profile extends MKDO_Class {
 	/**
 	 * Change admin capabilites
 	 */
-	public function edit_user_capabilities( $capabilities ) {
+	public function edit_admin_capabilities( $capabilities ) {
 	
 		
 		/* setup an array of capabilities to change - filterable */

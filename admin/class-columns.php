@@ -18,7 +18,7 @@
  * @subpackage MKDO_Admin/admin
  * @author     Make Do <hello@makedo.in>
  */
-class MKDO_Admin_Columns extends MKDO_Class {
+class MKDO_Columns extends MKDO_Class {
 
 	/**
 	 * Initialize the class and set its properties.
@@ -40,22 +40,7 @@ class MKDO_Admin_Columns extends MKDO_Class {
 			
 			$mkdo_columns = apply_filters(
 				'mkdo_remove_columns',
-				array(
-					'comments',
-					'tags',
-					'wpseo-score',
-					'wpseo-title',
-					'wpseo-metadesc',
-					'wpseo-focuskw',
-					'google_last30',
-					'twitter_shares',
-					'linkedin_shares',
-					'facebook_likes',
-					'facebook_shares',
-					'total_shares',
-					'decay_views',
-					'decay_shares',
-				)
+				array()
 			);
 			
 			foreach( $mkdo_columns as $column ) {
@@ -68,50 +53,49 @@ class MKDO_Admin_Columns extends MKDO_Class {
 	/**
 	 * Hide columns
 	 */
-	public function hide_columns() {
+	public function hide_columns( $user_login, $user ) {
+
+		$screens	 = 	get_post_types();
+
+		$mkdo_columns = apply_filters(
+			'mkdo_hide_columns',
+			array(
+				'comments',
+				'tags',
+				'wpseo-score',
+				'wpseo-title',
+				'wpseo-metadesc',
+				'wpseo-focuskw',
+				'google_last30',
+				'twitter_shares',
+				'linkedin_shares',
+				'facebook_likes',
+				'facebook_shares',
+				'total_shares',
+				'decay_views',
+				'decay_shares',
+			)
+		);
+
+		foreach( $screens as $screen ) {
 		
-		if( is_admin() ) {
+			$hidden_columns 	= get_user_option( 'manageedit-' . $screen . 'columnshidden',  $user->ID );
 
-			$user 		= wp_get_current_user();
-			$screen 	= get_current_screen();
-			$columns 	= get_column_headers( $screen );
-
-			$mkdo_columns = apply_filters(
-				'mkdo_hide_columns',
-				array(
-					'comments',
-					'tags',
-					'wpseo-score',
-					'wpseo-title',
-					'wpseo-metadesc',
-					'wpseo-focuskw',
-					'google_last30',
-					'twitter_shares',
-					'linkedin_shares',
-					'facebook_likes',
-					'facebook_shares',
-					'total_shares',
-					'decay_views',
-					'decay_shares',
-				)
-			);
-			
-			//$hidden_columns 	= get_user_option( 'manage' . $screen->id . 'columnshidden',  $user->ID );
-			$hidden_columns 	= array();
-
-			foreach( $columns as $column=>$value ) 
+			foreach( $mkdo_columns as $column ) 
 			{
-				if( in_array( $column, $mkdo_columns ) || in_array( 'all', $mkdo_columns ) ) {
+				if( !in_array( $column, (array) $hidden_columns ) ){
 
-					if( !in_array( $column, $hidden_columns ) && $column != 'cb' && $column != 'title' && $column != 'date'  ){
-
-						$hidden_columns[] 		= $column;
-					} 
-				}
+					$hidden_columns[] 		= $column;
+				} 
 			}
-			update_user_option( $user->ID, 'manage' . $screen->id . 'columnshidden', $hidden_columns );
+
+			$hidden_columns[] = array();
+
+			//wp_die(print_r($hidden_columns));
+
+			update_user_meta( $user->ID, 'manageedit-' . $screen . 'columnshidden', $hidden_columns );
+			//delete_user_option( $user->ID, 'manageedit-' . $screen . 'columnshidden' );
 		}
-		
 	}
 
 	/**

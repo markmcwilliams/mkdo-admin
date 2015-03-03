@@ -37,7 +37,14 @@ class MKDO_Admin_Dashboard extends MKDO_Menu {
 														'slug' 					=> 	'mkdo_dashboard',
 														'function'				=> 	array( $this, 'mkdo_dashboard'),
 														'icon' 					=> 	'dashicons-admin-page',
-														'position' 				=> 	'1'
+														'position' 				=> 	'1',
+														'remove_menus'			=> 	array(
+																						array( 
+																							'menu' 			=> 		'index.php',
+																							'admin_remove'	=>		TRUE,
+																							'mkdo_remove'	=> 		FALSE,
+																						)
+																					)
 													);
 
 		parent::__construct( $instance, $version, $args );
@@ -62,6 +69,22 @@ class MKDO_Admin_Dashboard extends MKDO_Menu {
 			);
 		}
 
+	}
+
+	/**
+	 * Add dashboard to menu
+	 */
+	public function add_menu_all() {
+		
+		add_menu_page(
+			'Dashboard',
+			'Dashboard',
+			'edit_posts',
+			'mkdo_dashboard',
+			array( $this, 'mkdo_dashboard'),
+			'dashicons-dashboard',
+			1
+		);
 	}
 
 	/**
@@ -99,6 +122,21 @@ class MKDO_Admin_Dashboard extends MKDO_Menu {
 				
 				$redirect_to = apply_filters( 'mkdo_super_user_login_redirect', admin_url() );
 			}
+		}
+
+		return $redirect_to;
+
+	}
+
+	/**
+	 * Redirect users to dashboard
+	 */
+	public function login_redirect_all( $redirect_to, $request_redirect_to, $user ) {
+	
+		if( $user && is_object( $user ) && !is_wp_error( $user ) && is_a( $user, 'WP_User' ) ) {
+
+			$redirect_to = apply_filters( 'mkdo_login_redirect', admin_url( 'admin.php?page=mkdo_dashboard' ) );$redirect_to = apply_filters( 'mkdo_login_redirect', admin_url( 'admin.php?page=mkdo_dashboard' ) );
+			
 		}
 
 		return $redirect_to;

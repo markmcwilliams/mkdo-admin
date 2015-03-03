@@ -18,7 +18,7 @@
  * @subpackage MKDO_Admin/admin
  * @author     Make Do <hello@makedo.in>
  */
-class MKDO_Admin_Metaboxes extends MKDO_Class {
+class MKDO_Metaboxes extends MKDO_Class {
 
 	/**
 	 * Initialize the class and set its properties.
@@ -41,58 +41,7 @@ class MKDO_Admin_Metaboxes extends MKDO_Class {
 			
 			$metaboxes = apply_filters(
 				'mkdo_remove_metaboxes',
-				array(
-					array(
-						'id' 		=> 'postcustom',
-						'page' 		=> array('post','page'),
-						'context' 	=> 'normal'
-					),
-					array(
-						'id' 		=> 'commentsdiv',
-						'page' 		=> array('post','page'),
-						'context' 	=> 'normal'
-					),
-					array(
-						'id' 		=> 'commentstatusdiv',
-						'page' 		=> array('post','page'),
-						'context' 	=> 'normal'
-					),
-					// array(
-					// 	'id' 		=> 'slugdiv',
-					// 	'page' 		=> array('post','page'),
-					// 	'context' 	=> 'normal'
-					// ),
-					array(
-						'id' 		=> 'trackbacksdiv',
-						'page' 		=> array('post','page'),
-						'context' 	=> 'normal'
-					),
-					// array(
-					// 	'id' 		=> 'revisionsdiv',
-					// 	'page'		=> array('post','page'),
-					// 	'context' 	=> 'normal'
-					// ),
-					array(
-						'id' 		=> 'tagsdiv-post_tag',
-						'page' 		=> array('post','page'),
-						'context' 	=> 'side'
-					),
-					// array(
-					// 	'id' 		=> 'authordiv',
-					// 	'page' 		=> array('post','page'),
-					// 	'context' 	=> 'normal'
-					// ),
-					array(
-						'id' 		=> 'wpseo_meta',
-						'page' 		=> 'all',
-						'context' 	=> 'normal'
-					),
-					array(
-						'id' 		=> 'relevanssi_hidebox',
-						'page' 		=> 'all',
-						'context' 	=> 'normal'
-					),
-				)
+				array()
 			);
 			
 			foreach( $metaboxes as $metabox ) {
@@ -121,7 +70,6 @@ class MKDO_Admin_Metaboxes extends MKDO_Class {
 	 */
 	public function hide_metaboxes( $hidden, $screen ) {
 
-
 		$hidden 	= 	apply_filters(
 							'mkdo_hide_metaboxes',
 							array(
@@ -137,8 +85,6 @@ class MKDO_Admin_Metaboxes extends MKDO_Class {
 								'relevanssi_hidebox',
 							)
 						);
-
-
 
 		return $hidden;
 	}
