@@ -3,15 +3,15 @@
 // Load WordPress dashboard API
 require_once( ABSPATH . 'wp-admin/includes/dashboard.php' );
 
-$title 			= __('Content');
+$title 			= __('Dashboard');
 $parent_file 	= 'admin.php';
 
 ?>
 
 <div class="wrap">
 	
-	<h2>Site Content</h2>
-	<p>Below are your sites content types. They are grouped here for ease of access to allow you to quickly get to content types either to add new content or the edit existing content.</p>
+	<h2>Welcome</h2>
+	<p>Welcome to the Dashboard. Below are a few things to help you get around. </p>
 	
 	<?php
 		
@@ -38,7 +38,7 @@ $parent_file 	= 'admin.php';
 	<?php 
 		do_action( $this->slug . 'after_screen_output', MKDO_Helper_Screen::get_screen_base() );
 	?>
-	
+		
 	<div class="clearfix clear"></div>
 </div>
 <div class="clearfix clear"></div>

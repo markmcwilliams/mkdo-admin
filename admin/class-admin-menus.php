@@ -176,46 +176,111 @@ class MKDO_Admin_Menus extends MKDO_Menu {
 		}
 
 		include $mkdo_content_menu_path;
-			
 	}
 
 	/**
-	 * Add 'Comments' to the menu dashboard
+	 * Render menu dashboard blocks
 	 */
-	public function add_comments_to_mkdo_dashboard() {
-	// 	if ( current_user_can('moderate_comments') ) {
-	// 		//if( MKDO_Helper_User::is_mkdo_user() ) {
-	// 			wp_add_dashboard_widget(
-	// 				'comments_dash_widget',
-	// 				'<span class="mkdo-block-title dashicons-before dashicons-admin-comments"></span> Comments',
-	// 				array( $this, 'render_mkdo_dashboard_comments' )
-	// 			);
-	// 		//}
-	// 	}
-	}
+	public function mkdo_content_menu_render_blocks() {
 
-	/**
-	 * Render 'Comments' block in menu dashboard // TODO: Make a template
-	 */
-	public function render_mkdo_dashboard_comments(){
-													
-		?>
+		$mkdo_content_blocks = apply_filters(
+			$this->slug . '_blocks',
+			array()
+		);
 
-		<!-- <div>
-			
-			<p><a class="button button-primary" href="edit-comments.php">Manage</a></p>
+		if( !empty( $mkdo_content_blocks ) ) {
 
+			$counter = 1;
+	
+			foreach( $mkdo_content_blocks as $block ) {
 
-			<div class="content-description">
+				$function_name = 'dynamic_dash_widget_' . $counter;
+				$$function_name = function() use ( $block ){
+					
+					$post_new 		= admin_url( 'post-new.php?post_type=' . $block[ 'post_type' ] );
+					$post_listing 	= admin_url( 'edit.php?post_type=' . $block[ 'post_type' ] );
 
-				<p>Manage comments left by site visitors.</p>
+					if ( defined('CMS_TPV_URL') ) { 
+						if( $post_listing = 'edit.php?post_type=page' ) {
+							$post_listing = 'edit.php?post_type=page&page=cms-tpv-page-page';
+						}
+					}
+					
+					$css_block_class = $block[ 'css_class' ];
+					
+					if( ! empty( $css_block_class ) ) {
+						$css_block_class = ' ' . $block[ 'css_class' ];
+					} else {
+						$css_block_class = '';
+					}
+																
+					?>
 
-			</div>
-			
-			<p class="footer-button"><a class="button" href="edit-comments.php">Edit / Manage Comments</a></p>
-			
-		</div> -->
+					
+					<div class="<?php echo esc_attr( $css_class ); ?>">
+						
+						<p><a class="button button-primary" href="<?php echo esc_url( $post_new ); ?>">Add New</a></p>
+
+						<div class="content-description">
 		
-		<?php
+							<?php echo $block[ 'desc' ]; ?>
+						
+						</div>
+						
+						<?php
+							
+							if( $block[ 'show_tax' ] == true ) {
+								
+								$taxonomies = get_object_taxonomies( $block[ 'post_type' ], 'objects' );
+
+								unset( $taxonomies[ 'post_format' ] );
+								unset( $taxonomies[ 'post_status' ] );
+								unset( $taxonomies[ 'ef_editorial_meta' ] );
+								unset( $taxonomies[ 'following_users' ] );
+								unset( $taxonomies[ 'ef_usergroup' ] );
+								
+								if( ! empty( $taxonomies ) ) {
+									
+									?>
+									<h4 class="tax-title">Associated Taxonomies</h4>
+									
+									<ul class="tax-list">
+									<?php
+										
+										foreach( $taxonomies as $tax ) {
+											?>
+											<li class="<?php echo esc_attr( sanitize_title( $tax->name ) ); ?>">
+												<span class="dashicons-before dashicons-category"></span>
+												<a href="<?php echo admin_url( 'edit-tags.php?taxonomy=' . $tax->name ); ?>"><?php echo esc_html( $tax->labels->name ); ?></a>
+											</li>
+											<?php
+										}
+										
+									?>
+									</ul>
+										
+									<?php
+								}
+								
+							}	
+							
+						?>
+						
+						<p class="footer-button"><a class="button" href="<?php echo esc_url( $post_listing ); ?>"><?php echo esc_html( $block[ 'button_label' ] ); ?></a></p>
+						
+					</div>
+					
+					<?php
+				};
+
+				wp_add_dashboard_widget(
+					'dynamic_dash_widget_' . $counter,
+					'<span class="mkdo-block-title dashicons-before ' . esc_attr( $block[ 'dashicon' ] ) . '"></span> ' . esc_html( $block[ 'title' ] ),
+					$$function_name 
+				);
+
+				$counter++;
+			}
+		} 
 	}
 }

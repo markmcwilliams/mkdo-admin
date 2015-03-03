@@ -14,15 +14,17 @@
  *
  * @wordpress-plugin
  * Plugin Name:       MKDO Admin
- * Plugin URI:        http://makedo.in
- * Description:       This is a short description of what the plugin does. It's displayed in the WordPress dashboard.
+ * Plugin URI:        https://github.com/mkdo/mkdo-admin
+ * Description:       A plugin to clean up the WordPress dashboard
  * Version:           1.0.0
- * Author:            MKDO Limited
+ * Author:            MKDO Ltd. (Make Do)
  * Author URI:        http://makedo.in
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       mkdo-admin
  * Domain Path:       /languages
+ * GitHub Plugin URI: https://github.com/mkdo/mkdo-admin
+ * GitHub Branch:     master
  */
 
 // If this file is called directly, abort.
@@ -113,10 +115,12 @@ class MKDO_Admin extends MKDO_Class {
 		require_once plugin_dir_path( __FILE__ ) . 'admin/class-admin-bar.php';
 		require_once plugin_dir_path( __FILE__ ) . 'admin/class-admin-footer.php';
 		require_once plugin_dir_path( __FILE__ ) . 'admin/class-admin-menus.php';
-
-		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-dashboard.php';
+		require_once plugin_dir_path( __FILE__ ) . 'admin/class-dashboard.php';
 		
 		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-notices.php';
+
+		// Content Blocks
+		require_once plugin_dir_path( __FILE__ ) . 'admin/class-content-blocks.php';
 
 		// Profiles
 		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-profile.php';
@@ -127,13 +131,11 @@ class MKDO_Admin extends MKDO_Class {
 		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-metaboxes.php';
 
 		// Taxonomies
-		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-taxonomies.php';
 
 		// Columns
 		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-columns.php';
 
-		// Statuses
-		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-status.php';
+		// Status
 
 		$this->loader = new MKDO_Loader();
 	}
@@ -175,14 +177,14 @@ class MKDO_Admin extends MKDO_Class {
 		$admin_bar				= new MKDO_Admin_bar						( $this->get_instance(), $this->get_version() );
 		$admin_footer			= new MKDO_Admin_Footer						( $this->get_instance(), $this->get_version() );
 		$admin_menus			= new MKDO_Admin_Menus						( $this->get_instance(), $this->get_version() );
+
+		$content_blocks			= new MKDO_Content_Blocks					( $this->get_instance(), $this->get_version() );
 		
-		$dashboard_admin		= new MKDO_Admin_Dashboard					( $this->get_instance(), $this->get_version() );
+		$dashboard				= new MKDO_Admin_Dashboard					( $this->get_instance(), $this->get_version() );
 		$notices_admin			= new MKDO_Admin_Notices					( $this->get_instance(), $this->get_version() );
 		$profile_admin			= new MKDO_Admin_Profile					( $this->get_instance(), $this->get_version() );
 		$metaboxes_admin		= new MKDO_Admin_Metaboxes					( $this->get_instance(), $this->get_version() );
 		$columns_admin			= new MKDO_Admin_Columns					( $this->get_instance(), $this->get_version() );
-		$taxonomies				= new MKDO_Admin_Taxonomies					( $this->get_instance(), $this->get_version() );
-		$status 				= new MKDO_Admin_Status						( $this->get_instance(), $this->get_version() );
 
 		/** 
 		 * Scripts
@@ -299,7 +301,7 @@ class MKDO_Admin extends MKDO_Class {
 
 		// Add custom footer text
 		// - Use the filter 'mkdo_footer_text' to add your own text
-		if( get_option( 'mkdo_admin_add_footer_text', TRUE ) === TRUE ) { 
+		if( get_option( 'mkdo_admin_add_footer_text', FALSE ) === TRUE ) { 
 			$this->loader->add_action( 'admin_footer_text', $admin_footer, 'add_footer_text', 9999 );
 		}
 
@@ -347,9 +349,35 @@ class MKDO_Admin extends MKDO_Class {
 		//   can alter the image path and CSS as required:
 		//   - /mkdo-admin/mkdo-content-menu.php
 		//   - /partials/mkdo-content-menu.php
+		//   
+		// - The admin page has 'blocks' of content in a custom dashboard, there are several ways to get custom
+		//   blocks into this dashboard. These are:
+		//   - Add a custom menu item using 'mkdo_content_menu_add_menu_items' and set 'add_to_dashboard' to 
+		//     TRUE, and enter the 'add_to_dashbaord_slug' as 'mkdo_content_menu'
+		//   - Filter the 'mkdo_content_menu_blocks' filter like so:
+		//     		add_filter( 'mkdo_content_menu_blocks', mkdo_content_menu_blocks_filter );
+		//     		function mkdo_content_menu_blocks_filter( $blocks ) {
+		//     			
+		//     			$blocks[] 	=	array(
+		//     								'title' 		=> 'Custom Block Name',
+		// 									'dashicon' 		=> 'dashicons-welcome-add-page',
+		// 									'desc' 			=> '<p>This content type is for managing ' . 'Custom Block Name' . '.</p>',
+		// 									'post_type' 	=> 'custom-block-name',
+		// 									'button_label' 	=> 'Edit / Manage ' . 'Custom Block Name',
+		// 									'css_class' 	=> 'custom-block-name',
+		// 									'show_tax' 		=> FALSE
+		//     							);
+		//     			
+		//     			return $blocks;
+		//     		}
+		//   - When adding a custom post type using the MKDO Objects framework, simply add the following line of code:
+		//   		if( class_exists( 'MKDO_Admin' ) ) {
+		// 				$this->loader->add_filter( 'mkdo_content_menu_blocks', $my_post_type_class, 'add_content_block' );
+		// 			}
 		if( get_option( 'mkdo_admin_add_mkdo_content_menu', TRUE ) === TRUE ) { 
-			$this->loader->add_action( 'admin_menu', $admin_menus, 'add_mkdo_content_menu', 9999 );
-			$this->loader->add_action( 'admin_menu', $admin_menus, 'add_mkdo_content_menu_items', 9999 );
+			$this->loader->add_action( 'admin_menu', 						$admin_menus, 'add_menu', 							9999 );
+			$this->loader->add_action( 'admin_menu', 						$admin_menus, 'add_menu_items', 					9999 );
+			$this->loader->add_action( 'mkdo_content_menu_render_blocks', 	$admin_menus, 'mkdo_content_menu_render_blocks', 	9999 );
 		}
 		
 		// Remove admin menus
@@ -394,21 +422,37 @@ class MKDO_Admin extends MKDO_Class {
 		
 		/**
 		 * Dashboards
-		 *
-		 * Add custom dashboard
-		 * Add login redirect to custom dashboard
-		 * Add 'content' dashboard block
-		 * Add 'Profile' dashboard block
-		 * Add 'Comments' dashboard block (from content dashboard)
-		 * 
 		 */
-		// $this->loader->add_action( 'admin_menu', 						$dashboard_admin, 		'add_mkdo_dashboard' 					);
-		// $this->loader->add_action( 'login_redirect', 					$dashboard_admin, 		'login_redirect', 						9999, 3 );
-		// $this->loader->add_action( 'mkdo_dashboard_blocks', 			$dashboard_admin, 		'add_content_block_to_mkdo_dashboard'	);
-		// $this->loader->add_action( 'mkdo_dashboard_blocks', 			$dashboard_admin, 		'add_profile_block_to_mkdo_dashboard'	);
-		// $this->loader->add_action( 'mkdo_dashboard_blocks', 			$admin_menus, 			'add_comments_to_mkdo_dashboard'		);
-		// $this->loader->add_action( 'mkdo_after_content_blocks', 		$admin_menus, 			'add_comments_to_mkdo_dashboard'		);
+		
+		// Add and redirect to custom dashboard
+		if( get_option( 'mkdo_admin_show_mkdo_dashboard', TRUE ) === TRUE ) { 
+			$this->loader->add_action( 'admin_menu', 		$dashboard, 	'add_menu', 			9999 	);
+			$this->loader->add_action( 'login_redirect', 	$dashboard,		'login_redirect', 		9999, 	3 	);
+		}
 
+		/**
+		 * Content Blocks
+		 */
+
+		// Show content on mkdo_content_menu
+		if( get_option( 'mkdo_admin_show_content_on_mkdo_dashboard', TRUE ) === TRUE ) { 
+			$this->loader->add_action( 'mkdo_dashboard_render_blocks', $content_blocks, 'add_content_block');
+		}
+
+		// Show comments on mkdo_content_menu
+		if( get_option( 'mkdo_admin_show_comments_on_mkdo_content_menu', TRUE ) === TRUE ) { 
+			$this->loader->add_action( 'mkdo_content_menu_after_blocks', $content_blocks, 'add_comments');
+		}
+
+		// Show profile on mkdo_content_menu
+		if( get_option( 'mkdo_admin_show_profile_on_mkdo_dashboard', TRUE ) === TRUE ) { 
+			$this->loader->add_action( 'mkdo_dashboard_render_blocks', $content_blocks, 'add_profile_block');
+		}
+
+		// Show comments on mkdo_content_menu
+		if( get_option( 'mkdo_admin_show_comments_on_mkdo_dashboard', TRUE ) === TRUE ) { 
+			$this->loader->add_action( 'mkdo_dashboard_render_blocks', $content_blocks, 'add_comments');
+		}
 
 		/**
 		 * Admin notices
@@ -434,25 +478,13 @@ class MKDO_Admin extends MKDO_Class {
 		$this->loader->add_action( 'get_user_option_admin_color', 		$profile_admin, 		'force_user_color_scheme' 				);
 		$this->loader->add_action( 'user_has_cap', 						$profile_admin, 		'edit_user_capabilities' 				);
 
-		
-
 		/** 
 		 * Metaboxes
 		 *
 		 * Remove the metaboxes
 		 */
-		$this->loader->add_action( 'do_meta_boxes', 		$metaboxes_admin, 		'remove_metaboxes' 						);
-		$this->loader->add_action( 'default_hidden_meta_boxes', $metaboxes_admin, 	'hide_metaboxes', 						10, 2 );
-
-		/** 
-		 * Taxonomies
-		 *
-		 * Add category to page
-		 * Add tag to page
-		 */
-		$this->loader->add_action( 'admin_init', 			$taxonomies, 			'add_category_to_page' 					);
-		$this->loader->add_action( 'admin_init', 			$taxonomies, 			'add_tags_to_page' 						);
-
+		$this->loader->add_action( 'do_meta_boxes', 			$metaboxes_admin, 		'remove_metaboxes' 						);
+		$this->loader->add_action( 'default_hidden_meta_boxes', $metaboxes_admin, 		'hide_metaboxes', 						10, 2 );
 
 		/** 
 		 * Columns
@@ -462,27 +494,6 @@ class MKDO_Admin extends MKDO_Class {
 		$this->loader->add_filter( 'init', 					$columns_admin, 		'remove_custom_post_columns', 			9998, 1 );
 		$this->loader->add_action( 'parse_request', 		$columns_admin, 		'hide_columns'							);
 		$this->loader->add_filter( 'admin_init', 			$columns_admin, 		'remove_column_filters', 				9999 );
-
-
-		/** 
-		 * Statuses
-		 *
-		 * Register the status
-		 * Make the status choosable
-		 * Dispaly the post status in the post list
-		 * Override Edit Flow post list status disable
-		 * Add status to Edit Flow column
-		 */
-		// $this->loader->add_action( 'init', 							$status, 				'add_archived_status' 					);
-		// $this->loader->add_action( 'admin_footer-post.php',			$status, 				'make_archived_status_choosable' 		);
-		// $this->loader->add_filter( 'display_post_states', 			$status, 				'add_archived_status_to_post_list'	 	);
-		// //$this->loader->add_action( 'admin_enqueue_scripts', 		$status, 				'override_edit_flow_status', 			9999 );
-		// $this->loader->add_action( 'manage_posts_custom_column', 	$status, 				'override_edit_flow_stauts_column'	 	);
-		// $this->loader->add_action( 'manage_pages_custom_column', 	$status, 				'override_edit_flow_stauts_column'	 	);
-
-		// // Add status to posts
-		// $this->loader->add_filter( 'mkdo_custom_status_archived_filter', 	$cpt_posts, 	'post_type_filter' 						);
-		
 
 		// Register hooks from other plugins
 		$this->loader->add_action( 'plugins_loaded', 		$this, 					'define_admin_dependancy_hooks' 		);
@@ -497,12 +508,6 @@ class MKDO_Admin extends MKDO_Class {
 	 */
 	public function define_admin_dependancy_hooks() {
 		
-		// if( class_exists( 'MKDO_Incidents' ) ) {
-
-		// 	$cpt_incidents 			= new MKDO_Incidents_CPT_incidents				( $this->get_instance(), $this->get_version() );
-			
-		// 	add_filter( 'mkdo_custom_status_archived_filter', array( $cpt_incidents, 'post_type_filter' ) );
-		// }
 	}
 
 	/**
