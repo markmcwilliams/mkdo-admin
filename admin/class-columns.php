@@ -91,10 +91,7 @@ class MKDO_Columns extends MKDO_Class {
 
 			$hidden_columns[] = array();
 
-			//wp_die(print_r($hidden_columns));
-
 			update_user_meta( $user->ID, 'manageedit-' . $screen . 'columnshidden', $hidden_columns );
-			//delete_user_option( $user->ID, 'manageedit-' . $screen . 'columnshidden' );
 		}
 	}
 
