@@ -600,18 +600,8 @@ class MKDO_Admin extends MKDO_Class {
 	 *
 	 * @since      1.0.0
 	 */
-	class MKDO_Admin_Deactivator {
+	public static function deactivate() {
 
-		/**
-		 * Short Description. (use period)
-		 *
-		 * Long Description.
-		 *
-		 * @since    1.0.0
-		 */
-		public static function deactivate() {
-
-		}
 
 	}
 
