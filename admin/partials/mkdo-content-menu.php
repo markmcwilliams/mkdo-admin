@@ -11,7 +11,7 @@ $parent_file 	= 'admin.php';
 <div class="wrap">
 	
 	<h2>Site Content</h2>
-	<p>Below are your sites content types. They are grouped here for ease of access to allow you to quickly get to content types either to add new content or the edit existing content.</p>
+	<p>Below are your sites content types. They are grouped here for ease of access to allow you to quickly add new content or edit existing content.</p>
 	
 	<?php
 		
