@@ -68,7 +68,6 @@ class MKDO_Admin_Dashboard extends MKDO_Menu {
 				1
 			);
 		}
-
 	}
 
 	/**

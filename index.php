@@ -288,18 +288,18 @@ class MKDO_Admin extends MKDO_Class {
 		
 		// Removes the admin footer message
 		if( get_option( 'mkdo_admin_remove_admin_footer', TRUE ) === TRUE ) { 
-			$this->loader->add_action( 'admin_footer_text', $admin_footer, 'remove_admin_footer', 9999 );
+			$this->loader->add_action( 'admin_footer_text', $admin_footer, 'remove_admin_footer', 99 );
 		}
 
 		// Removes the WP version number
 		if( get_option( 'mkdo_admin_remove_admin_version', TRUE ) === TRUE ) { 
-			$this->loader->add_action( 'update_footer', $admin_footer, 'remove_admin_version', 9999 );
+			$this->loader->add_action( 'update_footer', $admin_footer, 'remove_admin_version', 99 );
 		}
 
 		// Add custom footer text
 		// - Use the filter 'mkdo_footer_text' to add your own text
 		if( get_option( 'mkdo_admin_add_footer_text', FALSE ) === TRUE ) { 
-			$this->loader->add_action( 'admin_footer_text', $admin_footer, 'add_footer_text', 9999 );
+			$this->loader->add_action( 'admin_footer_text', $admin_footer, 'add_footer_text', 99 );
 		}
 
 		/**
@@ -308,7 +308,7 @@ class MKDO_Admin extends MKDO_Class {
 		
 		// Add custom menu
 		// 
-		// - Use the filter ''mkdo_content_menu_add_menu_items' to add menu items
+		// - Use the filter 'mkdo_content_menu_add_menu_items' to add menu items
 		// - Each item in the filter is an array in the following format
 		// 
 		// 		$mkdo_content_menus[] 	= 	array( 
@@ -323,7 +323,7 @@ class MKDO_Admin extends MKDO_Class {
 		//										'remove_original_sub_menu' 			=> 		FALSE,
 		//										'remove_original_sub_menu_parent' 	=> 		'',
 		// 										'admin_remove'						=>		TRUE,
-		// 										'mkdo_remove'						=> 		TRUE
+		// 										'mkdo_remove'						=> 		TRUE,
 		//										'add_to_dashboard'					=> 		TRUE,
 		//										'add_to_dashboard_slug'				=> 		'mkdo_content_menu',
 		//									);
@@ -376,9 +376,9 @@ class MKDO_Admin extends MKDO_Class {
 		// 				$this->loader->add_filter( 'mkdo_content_menu_blocks', $my_post_type_class, 'add_content_block' );
 		// 			}
 		if( get_option( 'mkdo_admin_add_mkdo_content_menu', TRUE ) === TRUE ) { 
-			$this->loader->add_action( 'admin_menu', 						$admin_menus, 'add_menu', 							9999 );
-			$this->loader->add_action( 'admin_menu', 						$admin_menus, 'add_menu_items', 					9999 );
-			$this->loader->add_action( 'mkdo_content_menu_render_blocks', 	$admin_menus, 'mkdo_content_menu_render_blocks', 	9999 );
+			$this->loader->add_action( 'admin_menu', 						$admin_menus, 'add_menu', 							99 );
+			$this->loader->add_action( 'admin_menu', 						$admin_menus, 'add_menu_items', 					99 );
+			$this->loader->add_action( 'mkdo_content_menu_render_blocks', 	$admin_menus, 'mkdo_content_menu_render_blocks', 	99 );
 		}
 		
 		// Remove admin menus
@@ -396,7 +396,7 @@ class MKDO_Admin extends MKDO_Class {
 		// 	  - 'admin_remove' will remove the item for admins
 		// 	  - 'mkdo_remove' will remove the item for super users
 		if( get_option( 'mkdo_admin_remove_admin_menus', TRUE ) === TRUE ) { 
-			$this->loader->add_action( 'admin_menu', $admin_menus, 'remove_admin_menus', 9999 );
+			$this->loader->add_action( 'admin_menu', $admin_menus, 'remove_admin_menus', 999 );
 		}
 
 		// Remove admin sub menus
@@ -416,7 +416,7 @@ class MKDO_Admin extends MKDO_Class {
 		// 	  - 'admin_remove' will remove the item for admins
 		// 	  - 'mkdo_remove' will remove the item for super users
 		if( get_option( 'mkdo_admin_remove_admin_sub_menus', TRUE ) === TRUE ) { 
-			$this->loader->add_action( 'admin_menu', $admin_menus, 'remove_admin_sub_menus', 9999 );
+			$this->loader->add_action( 'admin_menu', $admin_menus, 'remove_admin_sub_menus', 999 );
 		}
 
 		// Rename Media Library to Assets Library
@@ -431,15 +431,15 @@ class MKDO_Admin extends MKDO_Class {
 		
 		// Add and redirect to custom dashboard (non super user only)
 		if( get_option( 'mkdo_admin_show_mkdo_dashboard', FALSE ) === TRUE ) { 
-			$this->loader->add_action( 'admin_menu', 		$dashboard, 	'add_menu', 			9999 	);
-			$this->loader->add_action( 'login_redirect', 	$dashboard,		'login_redirect', 		9999, 	3 	);
-			$this->loader->add_action( 'admin_menu', 		$dashboard, 	'remove_admin_menus', 	9999 	);
+			$this->loader->add_action( 'admin_menu', 		$dashboard, 	'add_menu', 			999 	);
+			$this->loader->add_action( 'login_redirect', 	$dashboard,		'login_redirect', 		999, 	3 	);
+			$this->loader->add_action( 'admin_menu', 		$dashboard, 	'remove_admin_menus', 	999 	);
 		}
 
 		// Add and redirect to custom dashboard (all users)
 		if( get_option( 'mkdo_admin_show_mkdo_dashboard_all', TRUE ) === TRUE ) { 
-			$this->loader->add_action( 'admin_menu', 		$dashboard, 	'add_menu_all', 		9999 	);
-			$this->loader->add_action( 'login_redirect', 	$dashboard,		'login_redirect_all', 	9999, 	3 	);
+			$this->loader->add_action( 'admin_menu', 		$dashboard, 	'add_menu_all', 		999 	);
+			$this->loader->add_action( 'login_redirect', 	$dashboard,		'login_redirect_all', 	999, 	3 	);
 			
 			// Make sure the original dash menu is removed for MKDO users
 			add_filter( 'mkdo_dashboard_remove_admin_menus', function( $admin_menu ){
@@ -451,9 +451,9 @@ class MKDO_Admin extends MKDO_Class {
 				}
 				return $admin_menu;
 
-			}, 9999 );
+			}, 99 );
 
-			$this->loader->add_action( 'admin_menu', 		$dashboard, 	'remove_admin_menus', 	9999 	);
+			$this->loader->add_action( 'admin_menu', 		$dashboard, 	'remove_admin_menus', 	999 	);
 		}
 
 		/**
@@ -572,7 +572,7 @@ class MKDO_Admin extends MKDO_Class {
 		// By default the column is removed from all posts. If you want to do a custom remove you will need to 
 		// create a custom function by hooking into the 'init' action.
 		if( get_option( 'mkdo_admin_remove_columns', FALSE ) === TRUE ) { 
-			$this->loader->add_filter( 'init', $columns, 'remove_custom_post_columns', 9998, 1 );
+			$this->loader->add_filter( 'init', $columns, 'remove_custom_post_columns', 998, 1 );
 		}
 		
 		// Hide columns
@@ -606,7 +606,7 @@ class MKDO_Admin extends MKDO_Class {
 		// At the moment this filter is hardwired to remove the Yoast posts_filter_dropdown, however it may get
 		// expanded in the future.
 		if( get_option( 'mkdo_admin_remove_column_filters', TRUE ) === TRUE ) { 
-			$this->loader->add_filter( 'admin_init', $columns, 'remove_column_filters', 9999 );
+			$this->loader->add_filter( 'admin_init', $columns, 'remove_column_filters', 99 );
 		}
 	}
 
@@ -676,27 +676,26 @@ class MKDO_Admin extends MKDO_Class {
 	/**
 	 * Fired during plugin activation.
 	 *
-	 * This class defines all code necessary to run during the plugin's activation.
+	 * All code necessary to run during the plugin's activation.
 	 *
 	 * @since      1.0.0
 	 */
 	public static function activate() {
 
-		// get the current users, user ID
+		// Get the current users, user ID
 		$mkdo_user_id = get_current_user_id();
 	
-		// make the user a mkdo super user
+		// Make the user a mkdo super user
 		update_usermeta( $mkdo_user_id, 'mkdo_user', 1 );
 	
-		// set option to initialise the redirect
+		// Set option to initialise the redirect
 		add_option( 'mkdo_activation_redirect', TRUE );
-
 	}
 
 	/**
 	 * Fired during plugin deactivation.
 	 *
-	 * This class defines all code necessary to run during the plugin's deactivation.
+	 * All code necessary to run during the plugin's deactivation.
 	 *
 	 * @since      1.0.0
 	 */
