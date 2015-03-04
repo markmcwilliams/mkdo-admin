@@ -29,7 +29,6 @@ class MKDO_Admin_Menus extends MKDO_Menu {
 	 */
 	public function __construct( $instance, $version ) {
 		
-
 		$args 								= 	array(
 														'page_title' 			=> 	'Content',
 														'menu_title' 			=> 	'Content',
@@ -73,6 +72,11 @@ class MKDO_Admin_Menus extends MKDO_Menu {
 																						),
 																					),
 														'remove_menus'			=> 	array(
+																						array( 
+																							'menu' 			=> 		'edit.php?post_type=page',
+																							'admin_remove'	=>		TRUE,
+																							'mkdo_remove'	=> 		TRUE
+																						),
 																						array( 
 																							'menu' 			=> 		'edit-comments.php',
 																							'admin_remove'	=>		TRUE,
