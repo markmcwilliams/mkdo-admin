@@ -139,7 +139,6 @@ class MKDO_Admin_Dashboard extends MKDO_Menu {
 		}
 
 		return $redirect_to;
-
 	}
 
 }
