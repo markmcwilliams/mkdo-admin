@@ -20,7 +20,7 @@
  * @subpackage MKDO_Admin/public
  * @author     MKDO Limited <hello@makedo.in>
  */
-class MKDO_Register_Scripts_Public {
+class MKDO_Admin_Register_Scripts_Public {
 
 	/**
 	 * The ID of this plugin.
