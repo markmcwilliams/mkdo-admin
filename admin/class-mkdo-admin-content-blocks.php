@@ -18,7 +18,7 @@
  * @subpackage MKDO_Admin/admin
  * @author     Make Do <hello@makedo.in>
  */
-class MKDO_Content_Blocks extends MKDO_Class {
+class MKDO_Admin_Content_Blocks extends MKDO_Class {
 
 	/**
 	 * Initialize the class and set its properties.

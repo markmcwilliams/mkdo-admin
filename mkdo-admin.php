@@ -16,7 +16,7 @@
  * Plugin Name:       MKDO Admin
  * Plugin URI:        https://github.com/mkdo/mkdo-admin
  * Description:       A plugin to clean up the WordPress dashboard
- * Version:           1.0.0
+ * Version:           1.0.1
  * Author:            MKDO Ltd. (Make Do)
  * Author URI:        http://makedo.in
  * License:           GPL-2.0+
@@ -31,11 +31,13 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 // Auto Update From GitHub
-include_once plugin_dir_path( __FILE__ ) . 'vendor/WordPress-GitHub-Plugin-Updater/updater.php';
+if( !class_exists( 'WP_GitHub_Updater' ) ) {
+	include_once plugin_dir_path( __FILE__ ) . 'vendor/WordPress-GitHub-Plugin-Updater/updater.php';
+}
 if ( is_admin() ) { // note the use of is_admin() to double check that this is happening in the admin
 	$config = array(
 		'slug' 					=> plugin_basename(__FILE__), // this is the slug of your plugin
-		'proper_folder_name' 	=> 'plugin-name', // this is the name of the folder your plugin lives in
+		'proper_folder_name' 	=> 'mkdo-admin', // this is the name of the folder your plugin lives in
 		'api_url' 				=> 'https://api.github.com/repos/mkdo/mkdo-admin', // the GitHub API url of your GitHub repo
 		'raw_url' 				=> 'https://raw.github.com/mkdo/mkdo-admin/master', // the GitHub raw url of your GitHub repo
 		'github_url' 			=> 'https://github.com/mkdo/mkdo-admin', // the GitHub url of your GitHub repo
@@ -125,31 +127,31 @@ class MKDO_Admin extends MKDO_Class {
 	private function load_dependencies() {
 
 		// Register Scripts
-		require_once plugin_dir_path( __FILE__ ) . 'admin/class-register-scripts-admin.php';
-		require_once plugin_dir_path( __FILE__ ) . 'public/class-register-scripts-public.php';
+		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-register-scripts.php';
+		require_once plugin_dir_path( __FILE__ ) . 'public/class-mkdo-admin-register-scripts-public.php';
 
 		// Dashboard		
-		require_once plugin_dir_path( __FILE__ ) . 'admin/class-admin-bar.php';
-		require_once plugin_dir_path( __FILE__ ) . 'admin/class-admin-footer.php';
-		require_once plugin_dir_path( __FILE__ ) . 'admin/class-admin-menus.php';
-		require_once plugin_dir_path( __FILE__ ) . 'admin/class-dashboard.php';
-		require_once plugin_dir_path( __FILE__ ) . 'admin/class-notices.php';
+		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-bar.php';
+		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-footer.php';
+		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-menus.php';
+		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-dashboard.php';
+		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-notices.php';
 
 		// Content Blocks
-		require_once plugin_dir_path( __FILE__ ) . 'admin/class-content-blocks.php';
+		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-content-blocks.php';
 
 		// Profiles
-		require_once plugin_dir_path( __FILE__ ) . 'admin/class-admin-profile.php';
+		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-profile.php';
 
 		// Custom post types
 
 		// Meta boxes
-		require_once plugin_dir_path( __FILE__ ) . 'admin/class-metaboxes.php';
+		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-metaboxes.php';
 
 		// Taxonomies
 
 		// Columns
-		require_once plugin_dir_path( __FILE__ ) . 'admin/class-columns.php';
+		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-columns.php';
 
 		// Status
 
@@ -189,16 +191,16 @@ class MKDO_Admin extends MKDO_Class {
 		 * Load the admin classes used in this Plugin
 		 */
 		
-		$admin_scripts 			= new MKDO_Register_Scripts_Admin			( $this->get_instance(), $this->get_version() );
+		$admin_scripts 			= new MKDO_Admin_Register_Scripts			( $this->get_instance(), $this->get_version() );
 		$admin_bar				= new MKDO_Admin_bar						( $this->get_instance(), $this->get_version() );
 		$admin_footer			= new MKDO_Admin_Footer						( $this->get_instance(), $this->get_version() );
 		$admin_menus			= new MKDO_Admin_Menus						( $this->get_instance(), $this->get_version() );
-		$content_blocks			= new MKDO_Content_Blocks					( $this->get_instance(), $this->get_version() );
+		$content_blocks			= new MKDO_Admin_Content_Blocks				( $this->get_instance(), $this->get_version() );
 		$dashboard				= new MKDO_Admin_Dashboard					( $this->get_instance(), $this->get_version() );
-		$notices				= new MKDO_Notices							( $this->get_instance(), $this->get_version() );
+		$notices				= new MKDO_Admin_Notices					( $this->get_instance(), $this->get_version() );
 		$admin_profile			= new MKDO_Admin_Profile					( $this->get_instance(), $this->get_version() );
-		$metaboxes				= new MKDO_Metaboxes						( $this->get_instance(), $this->get_version() );
-		$columns				= new MKDO_Columns							( $this->get_instance(), $this->get_version() );
+		$metaboxes				= new MKDO_Admin_Metaboxes					( $this->get_instance(), $this->get_version() );
+		$columns				= new MKDO_Admin_Columns					( $this->get_instance(), $this->get_version() );
 
 		/** 
 		 * Scripts
@@ -636,7 +638,7 @@ class MKDO_Admin extends MKDO_Class {
 	 */
 	private function define_public_hooks() {
 
-		$public_scripts = new MKDO_Register_Scripts_Public( $this->get_instance(), $this->get_version() );
+		$public_scripts = new MKDO_Admin_Register_Scripts_Public( $this->get_instance(), $this->get_version() );
 
 		// Enqueue the styles
 		if( get_option( 'mkdo_admin_enqueue_styles_public', FALSE ) ) { 
