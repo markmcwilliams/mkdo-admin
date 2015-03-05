@@ -16,7 +16,7 @@
  * Plugin Name:       MKDO Admin
  * Plugin URI:        https://github.com/mkdo/mkdo-admin
  * Description:       A plugin to clean up the WordPress dashboard
- * Version:           1.0.0
+ * Version:           1.0.1
  * Author:            MKDO Ltd. (Make Do)
  * Author URI:        http://makedo.in
  * License:           GPL-2.0+
@@ -37,7 +37,7 @@ if( !class_exists( 'WP_GitHub_Updater' ) ) {
 if ( is_admin() ) { // note the use of is_admin() to double check that this is happening in the admin
 	$config = array(
 		'slug' 					=> plugin_basename(__FILE__), // this is the slug of your plugin
-		'proper_folder_name' 	=> 'plugin-name', // this is the name of the folder your plugin lives in
+		'proper_folder_name' 	=> 'mkdo-admin', // this is the name of the folder your plugin lives in
 		'api_url' 				=> 'https://api.github.com/repos/mkdo/mkdo-admin', // the GitHub API url of your GitHub repo
 		'raw_url' 				=> 'https://raw.github.com/mkdo/mkdo-admin/master', // the GitHub raw url of your GitHub repo
 		'github_url' 			=> 'https://github.com/mkdo/mkdo-admin', // the GitHub url of your GitHub repo
