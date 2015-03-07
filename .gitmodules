@@ -1,3 +1,0 @@
-[submodule "WordPress-GitHub-Plugin-Updater"]
-	path = vendor/WordPress-GitHub-Plugin-Updater
-	url = http://github.com/radishconcepts/WordPress-GitHub-Plugin-Updater.git
