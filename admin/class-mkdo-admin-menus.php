@@ -199,7 +199,7 @@ class MKDO_Admin_Menus extends MKDO_Menu {
 					$post_new 		= admin_url( 'post-new.php?post_type=' . $block[ 'post_type' ] );
 					$post_listing 	= admin_url( 'edit.php?post_type=' . $block[ 'post_type' ] );
 
-					if ( defined('CMS_TPV_URL') ) { 
+					if ( $block[ 'post_type' ] == 'page' && defined('CMS_TPV_URL') ) { 
 						if( $post_listing = 'edit.php?post_type=page' ) {
 							$post_listing = 'edit.php?post_type=page&page=cms-tpv-page-page';
 						}
