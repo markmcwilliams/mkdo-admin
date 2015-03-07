@@ -321,6 +321,7 @@ class MKDO_Admin extends MKDO_Class {
 		/**
 		 * Menus
 		 */
+
 		
 		// Add custom menu
 		// 
@@ -440,7 +441,13 @@ class MKDO_Admin extends MKDO_Class {
 			$this->loader->add_action( 'admin_menu', 	$admin_menus,	'rename_media_menu' 	);
 			$this->loader->add_filter( 'gettext', 		$admin_menus,	'rename_media_page', 	10,	3 );
 		}
-		
+
+		// Correct menu hierarchy
+		if( get_option( 'mkdo_admin_correct_menu_hierarchy', TRUE ) ) { 
+			$this->loader->add_filter( 'parent_file', 	$admin_menus, 'correct_menu_hierarchy', 10000 );
+			$this->loader->add_action( 'admin_head', 	$admin_menus, 'correct_sub_menu_hierarchy' 	);
+		}
+
 		/**
 		 * Dashboards
 		 */
