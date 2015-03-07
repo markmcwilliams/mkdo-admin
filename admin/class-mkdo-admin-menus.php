@@ -152,7 +152,7 @@ class MKDO_Admin_Menus extends MKDO_Menu {
 	    if ( 'default' == $domain and 'Media Library' == $text )
 	    {
 	        // Once is enough.
-	        remove_filter( 'gettext', 'rename_mkdo_media_page' );
+	        remove_filter( 'gettext', 'rename_media_page' );
 	        return 'Assets Library';
 	    }
 	    return $translation;
