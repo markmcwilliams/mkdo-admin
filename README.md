@@ -1,7 +1,7 @@
 MKDO Admin
 ==========
 
-~Current Version:1.0.1~
+~Current Version:1.0.2~
 
 A plugin to tame the WordPress dashbaord. 
 

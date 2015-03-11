@@ -16,7 +16,7 @@
  * Plugin Name:       MKDO Admin
  * Plugin URI:        https://github.com/mkdo/mkdo-admin
  * Description:       A plugin to clean up the WordPress dashboard
- * Version:           1.0.1
+ * Version:           1.0.2
  * Author:            MKDO Ltd. (Make Do)
  * Author URI:        http://makedo.in
  * License:           GPL-2.0+
