@@ -195,9 +195,9 @@ class MKDO_Admin_Menus extends MKDO_Menu {
 
 				$function_name = 'dynamic_dash_widget_' . $counter;
 				$$function_name = function() use ( $block ){
-					
-					$post_new 		= admin_url( 'post-new.php?post_type=' . $block[ 'post_type' ] );
-					$post_listing 	= admin_url( 'edit.php?post_type=' . $block[ 'post_type' ] );
+
+					$post_listing 	= $block[ 'link' ];
+					$post_new 		= $block[ 'call_to_action_link' ];
 
 					if ( $block[ 'post_type' ] == 'page' && defined('CMS_TPV_URL') ) { 
 						if( $post_listing = 'edit.php?post_type=page' ) {
@@ -206,19 +206,19 @@ class MKDO_Admin_Menus extends MKDO_Menu {
 					}
 					
 					$css_block_class = $block[ 'css_class' ];
-					
-					if( ! empty( $css_block_class ) ) {
-						$css_block_class = ' ' . $block[ 'css_class' ];
-					} else {
-						$css_block_class = '';
-					}
 																
 					?>
 
-					
-					<div class="<?php echo esc_attr( $css_class ); ?>">
+					<div class="<?php echo esc_attr( $css_block_class ); ?>">
 						
-						<p><a class="button button-primary" href="<?php echo esc_url( $post_new ); ?>">Add New</a></p>
+						<?php
+						if( !empty( $block[ 'post_type' ] ) ) {
+							?>
+							<p><a class="button button-primary" href="<?php echo esc_url( $post_new ); ?>"><?php echo esc_html( $block[ 'call_to_action_text' ] );?></a></p>
+
+							<?php
+						}
+						?>
 
 						<div class="content-description">
 		
