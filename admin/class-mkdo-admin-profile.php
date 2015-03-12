@@ -56,7 +56,7 @@ class MKDO_Admin_Profile extends MKDO_Class {
 						</legend>
 						
 						<label>
-							<input name="mkdo_user" type="checkbox" id="mkdo_user" value="1"<?php checked( get_user_meta( $user->ID, 'mkdo_user', true ) ) ?> />User is an MKDO user?.</label>
+							<input name="mkdo_user" type="checkbox" id="mkdo_user" value="1"<?php checked( get_user_meta( $user->ID, 'mkdo_user', true ) ) ?> />Warning: This user will be given full administration access.</label>
 					
 					</fieldset>
 					
