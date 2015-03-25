@@ -107,6 +107,26 @@ class MKDO_Admin_Menus extends MKDO_Menu {
 																							'admin_remove'	=>		TRUE,
 																							'mkdo_remove'	=> 		FALSE
 																						),
+																						array( 
+																							'menu' 			=> 		'all-in-one-seo-pack/aioseop_class.php',
+																							'admin_remove'	=>		TRUE,
+																							'mkdo_remove'	=> 		FALSE
+																						),
+																						array( 
+																							'menu' 			=> 		'activity_log_page',
+																							'admin_remove'	=>		TRUE,
+																							'mkdo_remove'	=> 		FALSE
+																						),
+																						array( 
+																							'menu' 			=> 		'edit.php?post_type=acf',
+																							'admin_remove'	=>		TRUE,
+																							'mkdo_remove'	=> 		FALSE
+																						),
+																						array( 
+																							'menu' 			=> 		'wp-user-avatar',
+																							'admin_remove'	=>		TRUE,
+																							'mkdo_remove'	=> 		FALSE
+																						)
 																					),
 														'remove_sub_menus'		=> 	array(
 																						array(

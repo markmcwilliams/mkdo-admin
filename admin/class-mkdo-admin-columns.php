@@ -74,6 +74,9 @@ class MKDO_Admin_Columns extends MKDO_Class {
 				'total_shares',
 				'decay_views',
 				'decay_shares',
+				'seotitle',
+				'seodesc',
+				'seokeywords',
 			)
 		);
 

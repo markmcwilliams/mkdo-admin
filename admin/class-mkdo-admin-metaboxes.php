@@ -83,6 +83,7 @@ class MKDO_Admin_Metaboxes extends MKDO_Class {
 								'authordiv',
 								'wpseo_meta',
 								'relevanssi_hidebox',
+								'aiosp'
 							)
 						);
 
