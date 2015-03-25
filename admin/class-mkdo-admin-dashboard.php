@@ -61,7 +61,7 @@ class MKDO_Admin_Dashboard extends MKDO_Menu {
 			add_menu_page(
 				'Dashboard',
 				'Dashboard',
-				'edit_posts',
+				'read',
 				'mkdo_dashboard',
 				array( $this, 'mkdo_dashboard'),
 				'dashicons-dashboard',
@@ -78,7 +78,7 @@ class MKDO_Admin_Dashboard extends MKDO_Menu {
 		add_menu_page(
 			'Dashboard',
 			'Dashboard',
-			'edit_posts',
+			'read',
 			'mkdo_dashboard',
 			array( $this, 'mkdo_dashboard'),
 			'dashicons-dashboard',
