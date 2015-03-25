@@ -97,6 +97,7 @@ class MKDO_Admin_Profile extends MKDO_Class {
 	 */
 	public function force_user_color_scheme( $color_scheme ) {
 		
+		$screen 		= get_current_screen();
 		$current_user 	= wp_get_current_user();
 		$roles 			= $current_user->roles;
 
@@ -119,6 +120,10 @@ class MKDO_Admin_Profile extends MKDO_Class {
 		}
 		else if( in_array( 'subscriber', 	$roles) ) {
 			$color_scheme 	= 'light';
+		}
+
+		if( is_multisite() && strpos( $screen->base, '-network') ) {
+			$color_scheme 	= 'sunrise';
 		}
 
 		return $color_scheme;

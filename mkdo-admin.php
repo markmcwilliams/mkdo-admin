@@ -16,7 +16,7 @@
  * Plugin Name:       MKDO Admin
  * Plugin URI:        https://github.com/mkdo/mkdo-admin
  * Description:       A plugin to clean up the WordPress dashboard
- * Version:           1.0.2
+ * Version:           1.1.0
  * Author:            MKDO Ltd. (Make Do)
  * Author URI:        http://makedo.in
  * License:           GPL-2.0+
@@ -131,6 +131,7 @@ class MKDO_Admin extends MKDO_Class {
 		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-bar.php';
 		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-footer.php';
 		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-menus.php';
+		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-mu-menus.php';
 		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-dashboard.php';
 		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-notices.php';
 
@@ -192,6 +193,7 @@ class MKDO_Admin extends MKDO_Class {
 		$admin_bar				= new MKDO_Admin_bar						( $this->get_instance(), $this->get_version() );
 		$admin_footer			= new MKDO_Admin_Footer						( $this->get_instance(), $this->get_version() );
 		$admin_menus			= new MKDO_Admin_Menus						( $this->get_instance(), $this->get_version() );
+		$mu_menus 				= new MKDO_Admin_MU_Menus					( $this->get_instance(), $this->get_version() );
 		$content_blocks			= new MKDO_Admin_Content_Blocks				( $this->get_instance(), $this->get_version() );
 		$dashboard				= new MKDO_Admin_Dashboard					( $this->get_instance(), $this->get_version() );
 		$notices				= new MKDO_Admin_Notices					( $this->get_instance(), $this->get_version() );
@@ -446,6 +448,63 @@ class MKDO_Admin extends MKDO_Class {
 		if( get_option( 'mkdo_admin_correct_menu_hierarchy', TRUE ) ) { 
 			$this->loader->add_filter( 'parent_file', 	$admin_menus, 'correct_menu_hierarchy', 10000 );
 			$this->loader->add_action( 'admin_head', 	$admin_menus, 'correct_sub_menu_hierarchy' 	);
+		}
+
+		/** 
+		 * MU Menus
+		 */
+		if( is_multisite() ) {
+
+			// Add Admin menus
+			if( get_option( 'mkdo_admin_add_mu_admin_menus', TRUE ) ) { 
+				$this->loader->add_action( 'admin_menu', $mu_menus, 'add_admin_menus', 99 );
+			}
+
+			// Add Admin sub menus
+			if( get_option( 'mkdo_admin_add_mu_admin_sub_menus', TRUE ) ) { 
+				$this->loader->add_action( 'admin_menu', $mu_menus, 'add_admin_sub_menus', 99 );
+			}
+			
+			// Add Network menus
+			if( get_option( 'mkdo_admin_add_mu_network_admin_menus', TRUE ) ) { 
+				$this->loader->add_action( 'network_admin_menu', $mu_menus, 'add_network_admin_menus', 100 );
+			}
+
+			// Add Network sub menus
+			if( get_option( 'mkdo_admin_add_mu_network_admin_sub_menus', TRUE ) ) { 
+				$this->loader->add_action( 'network_admin_menu', $mu_menus, 'add_network_admin_sub_menus', 100 );
+			}
+			
+			// Rename Network menus
+			if( get_option( 'mkdo_admin_rename_mu_network_admin_menus', TRUE ) ) { 
+				$this->loader->add_action( 'network_admin_menu', $mu_menus, 'rename_network_admin_menus', 99 );
+			}
+
+			// Rename Network sub menus
+			if( get_option( 'mkdo_admin_rename_mu_network_admin_sub_menus', TRUE ) ) { 
+				$this->loader->add_action( 'network_admin_menu', $mu_menus, 'rename_network_admin_sub_menus', 99 );
+			}
+
+			// Remove sub menus
+			if( get_option( 'mkdo_admin_remove_mu_admin_sub_menus', TRUE ) ) { 
+				$this->loader->add_action( 'admin_menu', $mu_menus, 'remove_admin_sub_menus', 99 );
+			}
+
+			// Remove network admin menus
+			if( get_option( 'mkdo_admin_remove_mu_network_admin_menus', TRUE ) ) { 
+				$this->loader->add_action( 'network_admin_menu', $mu_menus, 'remove_network_admin_menus', 99 );
+			}
+
+			// Correct menu hierarchy
+			if( get_option( 'mkdo_admin_correct_mu_menu_hierarchy', TRUE ) ) { 
+				$this->loader->add_action( 'admin_head', 	$mu_menus, 'correct_sub_menu_hierarchy' 	  );
+			}
+
+			// Filter the MU dashboard actions
+			if( get_option( 'mkdo_admin_filter_mu_dashbaord_actions', TRUE ) ) { 
+				$this->loader->add_filter( 'myblogs_blog_actions', 		$mu_menus, 'filter_dashboard_actions' );
+				$this->loader->add_filter( 'manage_sites_action_links', $mu_menus, 'filter_dashboard_actions' );
+			}
 		}
 
 		/**
