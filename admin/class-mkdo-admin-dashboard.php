@@ -33,7 +33,7 @@ class MKDO_Admin_Dashboard extends MKDO_Menu {
 		$args 								= 	array(
 														'page_title' 			=> 	'Dashboard',
 														'menu_title' 			=> 	'Dashboard',
-														'capibility' 			=> 	'edit_posts',
+														'capibility' 			=> 	'read',
 														'slug' 					=> 	'mkdo_dashboard',
 														'function'				=> 	array( $this, 'mkdo_dashboard'),
 														'icon' 					=> 	'dashicons-admin-page',
