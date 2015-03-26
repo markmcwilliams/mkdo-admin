@@ -3,94 +3,14 @@
  * included in this file.
  */
 
- /* Use FontAwesome */
- .dashicons-before.fa:before {
- 	font-family: FontAwesome !important;
- }
-
- /* Hide the second widget box on the dashboard */
- .toplevel_page_mkdo_dashboard #dashboard-widgets-wrap #dashboard-widgets .postbox-container #side-sortables,
- .toplevel_page_mkdo_content_menu #dashboard-widgets-wrap #dashboard-widgets .postbox-container #side-sortables
- {
- 	display: none;
- }
-
- .toplevel_page_mkdo_dashboard #dashboard-widgets-wrap #dashboard-widgets .postbox-container .meta-box-sortables,
- .toplevel_page_mkdo_content_menu #dashboard-widgets-wrap #dashboard-widgets .postbox-container .meta-box-sortables
- {
- 	width: 99% !important;
- 	overflow: hidden;
- }
-
-.toplevel_page_mkdo_dashboard #dashboard-widgets-wrap #dashboard-widgets .postbox-container,
-.toplevel_page_mkdo_content_menu #dashboard-widgets-wrap #dashboard-widgets .postbox-container
-{
- 	width: 100% !important;
+/* Use FontAwesome */
+.dashicons-before.fa:before {
+	font-family: FontAwesome !important;
 }
 
-.toplevel_page_mkdo_dashboard #dashboard-widgets-wrap #dashboard-widgets .postbox-container .postbox .tax-list .dashicons-before:before,
-.toplevel_page_mkdo_content_menu #dashboard-widgets-wrap #dashboard-widgets .postbox-container .postbox .tax-list .dashicons-before:before {
+#dashboard-widgets-wrap #dashboard-widgets .postbox-container .postbox .tax-list .dashicons-before:before,
+#dashboard-widgets-wrap #dashboard-widgets .postbox-container .postbox .tax-list .dashicons-before:before {
 	color: #aaa;
-}
-
-.toplevel_page_mkdo_dashboard #dashboard-widgets-wrap #dashboard-widgets .postbox-container .postbox .inside,
-.toplevel_page_mkdo_content_menu #dashboard-widgets-wrap #dashboard-widgets .postbox-container .postbox .inside {
-	padding-bottom: 50px;
-}
-
-.toplevel_page_mkdo_dashboard #dashboard-widgets-wrap #dashboard-widgets .postbox-container .postbox .footer-button,
-.toplevel_page_mkdo_content_menu #dashboard-widgets-wrap #dashboard-widgets .postbox-container .postbox .footer-button {
-	position: absolute;
-	bottom: -13px;
-	left:0px;
-	border-top: 1px solid #eee;
-	width:100%;
-	padding-top: 11px;
-	padding-bottom: 11px;
-}
-
-.toplevel_page_mkdo_dashboard #dashboard-widgets-wrap #dashboard-widgets .postbox-container .postbox .footer-button .button,
-.toplevel_page_mkdo_content_menu #dashboard-widgets-wrap #dashboard-widgets .postbox-container .postbox .footer-button .button {
-	margin-left: 11px;
-	margin-right: 11px;
-}
-
-.toplevel_page_mkdo_dashboard #dashboard-widgets-wrap #dashboard-widgets .postbox-container .postbox,
-.toplevel_page_mkdo_content_menu #dashboard-widgets-wrap #dashboard-widgets .postbox-container .postbox {
-	position: relative;
-}
-
-.toplevel_page_mkdo_dashboard #dashboard-widgets-wrap #dashboard-widgets .postbox-container .postbox,
-.toplevel_page_mkdo_dashboard #dashboard-widgets-wrap #dashboard-widgets .postbox-container .postbox .inside,
-.toplevel_page_mkdo_content_menu #dashboard-widgets-wrap #dashboard-widgets .postbox-container .postbox,
-.toplevel_page_mkdo_content_menu #dashboard-widgets-wrap #dashboard-widgets .postbox-container .postbox .inside {
-	transition: all 0.2s ease-in-out;
-}
-
-@media (min-width: 800px) {
-	.toplevel_page_mkdo_dashboard #dashboard-widgets-wrap #dashboard-widgets .postbox-container .postbox,
-	.toplevel_page_mkdo_content_menu #dashboard-widgets-wrap #dashboard-widgets .postbox-container .postbox {
-		margin-left: 0.5%;
-		margin-right: 0.5%;
-		width: 31.33%;
-		float:left; 
-	}
-
-	.toplevel_page_mkdo_dashboard #dashboard-widgets-wrap #dashboard-widgets .postbox-container .postbox:first-child,
-	.toplevel_page_mkdo_dashboard #dashboard-widgets-wrap #dashboard-widgets .postbox-container .postbox:nth-child(3n+1),
-	.toplevel_page_mkdo_content_menu #dashboard-widgets-wrap #dashboard-widgets .postbox-container .postbox:first-child,
-	.toplevel_page_mkdo_content_menu #dashboard-widgets-wrap #dashboard-widgets .postbox-container .postbox:nth-child(3n+1) {
-		margin-left: 0px;
-		clear: left;
-	}
-
-	.toplevel_page_mkdo_dashboard #dashboard-widgets-wrap #dashboard-widgets .postbox-container .postbox:last-child,
-	.toplevel_page_mkdo_dashboard #dashboard-widgets-wrap #dashboard-widgets .postbox-container .postbox:nth-child(3n+0),
-	.toplevel_page_mkdo_content_menu #dashboard-widgets-wrap #dashboard-widgets .postbox-container .postbox:last-child,
-	.toplevel_page_mkdo_content_menu #dashboard-widgets-wrap #dashboard-widgets .postbox-container .postbox:nth-child(3n+0) {
-		margin-right: 0px;
-		clear:right;
-	}
 }
 
 div.updated.taxonomies-notice,

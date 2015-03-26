@@ -213,7 +213,7 @@ class MKDO_Admin_Menus extends MKDO_Menu {
 	
 			foreach( $mkdo_content_blocks as $block ) {
 
-				$function_name = 'dynamic_dash_widget_' . $counter;
+				$function_name = 'mkdo_content_menu_widget_' . $counter;
 				$$function_name = function() use ( $block ){
 
 					$post_listing 	= $block[ 'link' ];
@@ -292,11 +292,21 @@ class MKDO_Admin_Menus extends MKDO_Menu {
 					<?php
 				};
 
-				wp_add_dashboard_widget(
-					'dynamic_dash_widget_' . $counter,
-					'<span class="mkdo-block-title dashicons-before ' . esc_attr( $block[ 'dashicon' ] ) . '"></span> ' . esc_html( $block[ 'title' ] ),
-					$$function_name 
-				);
+				// wp_add_dashboard_widget(
+				// 	'dynamic_dash_widget_' . $counter,
+				// 	'<span class="mkdo-block-title dashicons-before ' . esc_attr( $block[ 'dashicon' ] ) . '"></span> ' . esc_html( $block[ 'title' ] ),
+				// 	$$function_name 
+				// );
+				
+				$position = 'side';
+				$is_even = ( $counter % 2 == 0 );
+
+				if( $is_even ) {
+					$position = 'normal';
+				}
+				$screen = get_current_screen();
+
+				add_meta_box('mkdo_content_menu_widget_' . $counter, '<span class="mkdo-block-title dashicons-before ' . esc_attr( $block[ 'dashicon' ] ) . '"></span> ' . esc_html( $block[ 'title' ] ), $$function_name, $screen, $position );
 
 				$counter++;
 			}

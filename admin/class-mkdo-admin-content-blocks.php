@@ -98,12 +98,13 @@ class MKDO_Admin_Content_Blocks extends MKDO_Class {
 	 */
 	public function add_profile_block() {
 
-		wp_add_dashboard_widget(
-				'profile_dash_widget',
-				'<span class="mkdo-block-title dashicons-before dashicons-admin-users"></span> Profile',
-				array( $this, 'render_profile_block' )
-		);
+		// wp_add_dashboard_widget(
+		// 		'profile_dash_widget',
+		// 		'<span class="mkdo-block-title dashicons-before dashicons-admin-users"></span> Profile',
+		// 		array( $this, 'render_profile_block' )
+		// );
 
+		add_meta_box('profile_dash_widget', '<span class="mkdo-block-title dashicons-before dashicons-admin-users"></span> Profile', array( $this, 'render_profile_block' ), 'dashboard', 'side');
 	}
 
 	/**

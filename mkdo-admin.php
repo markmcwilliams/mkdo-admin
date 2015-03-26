@@ -113,7 +113,7 @@ class MKDO_Admin extends MKDO_Class {
 		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-bar.php';
 		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-footer.php';
 		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-menus.php';
-		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-dashboard.php';
+		// require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-dashboard.php';
 		require_once plugin_dir_path( __FILE__ ) . 'admin/class-mkdo-admin-notices.php';
 
 		// Content Blocks
@@ -175,7 +175,7 @@ class MKDO_Admin extends MKDO_Class {
 		$admin_footer			= new MKDO_Admin_Footer						( $this->get_instance(), $this->get_version() );
 		$admin_menus			= new MKDO_Admin_Menus						( $this->get_instance(), $this->get_version() );
 		$content_blocks			= new MKDO_Admin_Content_Blocks				( $this->get_instance(), $this->get_version() );
-		$dashboard				= new MKDO_Admin_Dashboard					( $this->get_instance(), $this->get_version() );
+		// $dashboard				= new MKDO_Admin_Dashboard					( $this->get_instance(), $this->get_version() );
 		$notices				= new MKDO_Admin_Notices					( $this->get_instance(), $this->get_version() );
 		$admin_profile			= new MKDO_Admin_Profile					( $this->get_instance(), $this->get_version() );
 		$metaboxes				= new MKDO_Admin_Metaboxes					( $this->get_instance(), $this->get_version() );
@@ -224,7 +224,7 @@ class MKDO_Admin extends MKDO_Class {
 			$this->loader->add_action( 'wp_before_admin_bar_render', $admin_bar, 'remove_my_sites' );
 		}
 
-		// Remove my sites
+		// Remove logo
 		if( get_option( 'mkdo_admin_remove_wp_logo', FALSE ) ) { 
 			$this->loader->add_action( 'wp_before_admin_bar_render', $admin_bar, 'remove_wp_logo' );
 		}
@@ -428,38 +428,21 @@ class MKDO_Admin extends MKDO_Class {
 		if( get_option( 'mkdo_admin_correct_menu_hierarchy', TRUE ) ) { 
 			$this->loader->add_filter( 'parent_file', 	$admin_menus, 'correct_menu_hierarchy', 10000 );
 			$this->loader->add_action( 'admin_head', 	$admin_menus, 'correct_sub_menu_hierarchy' 	);
+		}	
+
+		function remove_dashboard_meta() {
+		        remove_meta_box( 'dashboard_incoming_links', 'dashboard', 'normal' );
+		        remove_meta_box( 'dashboard_plugins', 'dashboard', 'normal' );
+		        remove_meta_box( 'dashboard_primary', 'dashboard', 'side' );
+		        remove_meta_box( 'dashboard_secondary', 'dashboard', 'normal' );
+		        remove_meta_box( 'dashboard_quick_press', 'dashboard', 'side' );
+		        remove_meta_box( 'dashboard_recent_drafts', 'dashboard', 'side' );
+		        remove_meta_box( 'dashboard_recent_comments', 'dashboard', 'normal' );
+		        remove_meta_box( 'dashboard_right_now', 'dashboard', 'normal' );
+		        remove_meta_box( 'dashboard_activity', 'dashboard', 'normal');
+		        remove_meta_box( 'simple_history_dashboard_widget', 'dashboard', 'normal');
 		}
-
-		/**
-		 * Dashboards
-		 */
-		
-		// Add and redirect to custom dashboard (non super user only)
-		if( get_option( 'mkdo_admin_show_mkdo_dashboard', FALSE ) ) { 
-			$this->loader->add_action( 'admin_menu', 		$dashboard, 	'add_menu', 			99 	);
-			$this->loader->add_action( 'login_redirect', 	$dashboard,		'login_redirect', 		99, 	3 	);
-			$this->loader->add_action( 'admin_menu', 		$dashboard, 	'remove_admin_menus', 	99 	);
-		}
-
-		// Add and redirect to custom dashboard (all users)
-		if( get_option( 'mkdo_admin_show_mkdo_dashboard_all', TRUE ) ) { 
-			$this->loader->add_action( 'admin_menu', 		$dashboard, 	'add_menu_all', 		99 	);
-			$this->loader->add_action( 'login_redirect', 	$dashboard,		'login_redirect_all', 	99, 	3 	);
-			
-			// Make sure the original dash menu is removed for MKDO users
-			add_filter( 'mkdo_dashboard_remove_admin_menus', function( $admin_menu ){
-
-				foreach( $admin_menu as &$menu ) {
-					if( $menu['menu'] == 'index.php' ) {
-						$menu['mkdo_remove'] = TRUE;
-					}
-				}
-				return $admin_menu;
-
-			}, 99 );
-
-			$this->loader->add_action( 'admin_menu', 		$dashboard, 	'remove_admin_menus', 	99 	);
-		}
+		add_action( 'admin_init', 'remove_dashboard_meta' );
 
 		/**
 		 * Content Blocks
@@ -467,7 +450,7 @@ class MKDO_Admin extends MKDO_Class {
 
 		// Show content on mkdo_content_menu
 		if( get_option( 'mkdo_admin_show_content_on_mkdo_dashboard', TRUE ) ) { 
-			$this->loader->add_action( 'mkdo_dashboard_render_blocks', $content_blocks, 'add_content_block');
+			$this->loader->add_action( 'wp_dashboard_setup', $content_blocks, 'add_content_block');
 		}
 
 		// Show comments on mkdo_content_menu
@@ -477,12 +460,14 @@ class MKDO_Admin extends MKDO_Class {
 
 		// Show profile on mkdo_content_menu
 		if( get_option( 'mkdo_admin_show_profile_on_mkdo_dashboard', TRUE ) ) { 
-			$this->loader->add_action( 'mkdo_dashboard_render_blocks', $content_blocks, 'add_profile_block');
+			$this->loader->add_action( 'wp_dashboard_setup', $content_blocks, 'add_profile_block');
 		}
+
+
 
 		// Show comments on mkdo_content_menu
 		if( get_option( 'mkdo_admin_show_comments_on_mkdo_dashboard', TRUE ) ) { 
-			$this->loader->add_action( 'mkdo_dashboard_render_blocks', $content_blocks, 'add_comments');
+			$this->loader->add_action( 'wp_dashboard_setup', $content_blocks, 'add_comments');
 		}
 
 		/**
