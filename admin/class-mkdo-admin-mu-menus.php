@@ -298,20 +298,4 @@ class MKDO_Admin_MU_Menus extends MKDO_Class {
 		}
 	}
 
-	/**
-	 * Filter the MU dashboad actions
-	 * 
-	 * @param  string 	$actions 	The actions to be filtered
-	 * @return string 	$actions 	The actions to be filtered
-	 */
-	public function filter_dashboard_actions( $actions ) {
-
-		$user_id 		= get_current_user_id();
-		$user_role 		= get_user_meta( $user_id , 'cpd_role', TRUE );
-		$menu_slug 		= 'mkdo_dashboard';
-
-		$actions = str_replace( 'wp-admin/\'', 'wp-admin/admin.php?page=' . $menu_slug . '\'', $actions );
-		return $actions;
-	}
-
 }
