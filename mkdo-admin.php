@@ -481,7 +481,7 @@ class MKDO_Admin extends MKDO_Class {
 		 * Content Blocks
 		 */
 
-		// Show content on mkdo_content_menu
+		// Show content on dashboard
 		if( get_option( 'mkdo_admin_show_content_on_dashboard', TRUE ) ) { 
 			$this->loader->add_action( 'wp_dashboard_setup', $content_blocks, 'add_content_block' );
 		}
@@ -491,14 +491,13 @@ class MKDO_Admin extends MKDO_Class {
 			$this->loader->add_action( 'mkdo_content_menu_after_blocks', $content_blocks, 'add_comments' );
 		}
 
-		// Show profile on mkdo_content_menu
+		// Show profile on dashboard
 		if( get_option( 'mkdo_admin_show_profile_on_dashboard', TRUE ) ) { 
 			$this->loader->add_action( 'wp_dashboard_setup', $content_blocks, 'add_profile_block');
 		}
 
 
-
-		// Show comments on mkdo_content_menu
+		// Show comments on dashboard
 		if( get_option( 'mkdo_admin_show_comments_on_dashboard', TRUE ) ) { 
 			$this->loader->add_action( 'wp_dashboard_setup', $content_blocks, 'add_comments');
 		}

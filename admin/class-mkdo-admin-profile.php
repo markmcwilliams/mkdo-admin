@@ -45,18 +45,20 @@ class MKDO_Admin_Profile extends MKDO_Class {
 		<table class="form-table">
 
 			<tr>
-				<th scope="row">Admin Super User?</th>
+				<th scope="row">Elevated Admin Privileges</th>
 
 				<td>
 					
 					<fieldset>
 					
 						<legend class="screen-reader-text">
-							<span>Admin Super User?</span>
+							<span>Elevated Admin Privileges</span>
 						</legend>
 						
 						<label>
-							<input name="mkdo_user" type="checkbox" id="mkdo_user" value="1"<?php checked( get_user_meta( $user->ID, 'mkdo_user', true ) ) ?> />Warning: This user will be given full administration access.</label>
+							<input name="mkdo_user" type="checkbox" id="mkdo_user" value="1"<?php checked( get_user_meta( $user->ID, 'mkdo_user', true ) ) ?> />
+							Grant this user elevated admin privileges.
+						</label>
 					
 					</fieldset>
 					
