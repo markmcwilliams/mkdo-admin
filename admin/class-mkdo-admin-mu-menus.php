@@ -21,6 +21,15 @@
 class MKDO_Admin_MU_Menus extends MKDO_Class {
 
 	/**
+	 * The name of the network dashboard
+	 *
+	 * @since    1.0.0
+	 * @access   protected
+	 * @var      string    $instance    The name of the network dashboard
+	 */
+	protected $network_dash_title;
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
@@ -29,61 +38,14 @@ class MKDO_Admin_MU_Menus extends MKDO_Class {
 	 */
 	public function __construct( $instance, $version ) {
 		parent::__construct( $instance, $version );
-	}
 
-	/**
-	 * Add admin menus
-	 */
-	public function add_admin_menus() {
+		$network_dash_title = apply_filters(
+			'mkdo_admin_network_dash_title_filter',
+			'Network Settings'
+		);
 
-		// If the user is a super admin (network manager)
-		if( is_super_admin() ) {
+		$this->network_dash_title = $network_dash_title;
 
-			if( !MKDO_Helper_User::is_mkdo_user() ) 
-			{
-				add_menu_page( 
-					'Global Settings', 
-					'Global Settings', 
-					'manage_network',
-					'network/index.php',
-					'',
-					'dashicons-admin-site',
-					9999
-				);
-			}
-
-			add_menu_page( 
-				'Sites', 
-				'Sites', 
-				'manage_network', 
-				'network/sites.php',
-				'',
-				'dashicons-networking',
-				3
-			);
-
-		}
-		// If the user is not a super admin (network manager)
-		else {
-
-			// If the user belogs to more than one blog (site)
-			$user_id 	= get_current_user_id();
-			$user_blogs = get_blogs_of_user( $user_id );
-
-			if ( count( $user_blogs ) > 1 || ( !user_can( $user_id, 'edit_posts' ) && count( $user_blogs ) > 0 ) ) {
-
-				add_menu_page( 
-					'My Sites', 
-					'My Sites', 
-					'read', 
-					'my-sites.php',
-					'',
-					'dashicons-networking',
-					2
-				);
-
-			}
-		}
 	}
 
 	/**
@@ -94,14 +56,13 @@ class MKDO_Admin_MU_Menus extends MKDO_Class {
 		if( is_super_admin() ) {
 
 			add_submenu_page(
-				'options-general.php',
-				'Global Settings',
-				'Global Settings',
+				'index.php',
+				$this->network_dash_title,
+				$this->network_dash_title,
 				'manage_network',
 				'network/index.php',
 				''
 			);
-
 		}
 	}
 
@@ -113,14 +74,13 @@ class MKDO_Admin_MU_Menus extends MKDO_Class {
 		if( is_super_admin() ) {
 			
 			$user_id 		= get_current_user_id();
-			$user_role 		= get_user_meta( $user_id , 'cpd_role', TRUE );
-			$menu_slug 		= 'mkdo_dashboard';
+			$user_role 		= get_user_meta( $user_id , 'mkdo_admin_role', TRUE );
 
 			add_menu_page( 
 				'Dashboard', 
 				'Dashboard', 
 				'manage_network',
-				'../admin.php?page=' . $menu_slug,
+				'../',
 				'',
 				'dashicons-dashboard',
 				1
@@ -133,61 +93,73 @@ class MKDO_Admin_MU_Menus extends MKDO_Class {
 	 */
 	public function add_network_admin_sub_menus() {
 
+		$menus = array(
+					array (
+						'parent_slug' 	=> 	'index.php',
+						'page_title' 	=> 	'Sites',
+						'menu_title' 	=> 	'Sites',
+						'capability' 	=> 	'manage_network',
+						'menu_slug'		=> 	'sites.php',
+						'function' 		=> 	''
+					),
+					array (
+						'parent_slug' 	=> 	'index.php',
+						'page_title' 	=> 	'Users',
+						'menu_title' 	=> 	'Users',
+						'capability' 	=> 	'manage_network',
+						'menu_slug'		=> 	'users.php',
+						'function' 		=> 	''
+					),
+					array (
+						'parent_slug' 	=> 	'index.php',
+						'page_title' 	=> 	'Themes',
+						'menu_title' 	=> 	'Themes',
+						'capability' 	=> 	'manage_network',
+						'menu_slug'		=> 	'themes.php',
+						'function' 		=> 	''
+					),
+					array (
+						'parent_slug' 	=> 	'index.php',
+						'page_title' 	=> 	'Plugins',
+						'menu_title' 	=> 	'Plugins',
+						'capability' 	=> 	'manage_network',
+						'menu_slug'		=> 	'plugins.php',
+						'function' 		=> 	''
+					),
+					array (
+						'parent_slug' 	=> 	'index.php',
+						'page_title' 	=> 	'Settings',
+						'menu_title' 	=> 	'Settings',
+						'capability' 	=> 	'manage_network',
+						'menu_slug'		=> 	'settings.php',
+						'function' 		=> 	''
+					),
+					array (
+						'parent_slug' 	=> 	'index.php',
+						'page_title' 	=> 	'Updates',
+						'menu_title' 	=> 	'Updates',
+						'capability' 	=> 	'manage_network',
+						'menu_slug'		=> 	'update-core.php',
+						'function' 		=> 	''
+					),
+				);
+
+		$network_admin_sub_menus = apply_filters(
+			'mkdo_admin_add_network_admin_sub_menus_filter',
+			$menus
+		);
+
 		if( is_super_admin() ) {
-			
-			add_submenu_page(
-				'index.php',
-				'Sites',
-				'Sites',
-				'manage_network',
-				'sites.php',
-				''
-			);
-
-			add_submenu_page(
-				'index.php',
-				'Users',
-				'Users',
-				'manage_network',
-				'users.php',
-				''
-			);
-
-			add_submenu_page(
-				'index.php',
-				'Themes',
-				'Themes',
-				'manage_network',
-				'themes.php',
-				''
-			);
-
-			add_submenu_page(
-				'index.php',
-				'Plugins',
-				'Plugins',
-				'manage_network',
-				'plugins.php',
-				''
-			);
-
-			add_submenu_page(
-				'index.php',
-				'Settings',
-				'Settings',
-				'manage_network',
-				'settings.php',
-				''
-			);
-
-			add_submenu_page(
-				'index.php',
-				'Updates',
-				'Updates',
-				'manage_network',
-				'update-core.php',
-				''
-			);
+			foreach( $network_admin_sub_menus as $menu ) {
+				add_submenu_page(
+					$menu['parent_slug'],
+					$menu['page_title'],
+					$menu['menu_title'],
+					$menu['capability'],
+					$menu['menu_slug'],
+					$menu['function']
+				);
+			}
 		}
 	}
 
@@ -202,9 +174,9 @@ class MKDO_Admin_MU_Menus extends MKDO_Class {
 
 			// Rename menu items
 			foreach( $menu as $key=>&$menu_item ) {
-				if( $menu_item[0] == 'Dashboard' || $menu_item[0] == 'Global Settings' ) {
+				if( $menu_item[0] == 'Dashboard' || $menu_item[0] == 'Network Settings' ) {
 
-					$menu_item[0] 	= 'Global Settings';
+					$menu_item[0] 	= $this->network_dash_title;
 					$menu_item[6] 	= 'dashicons-admin-site';
 					$network		= $menu[$key];
 					unset( $menu[$key] );
@@ -215,59 +187,28 @@ class MKDO_Admin_MU_Menus extends MKDO_Class {
 	}
 
 	/**
-	 * Rename network sub menus
-	 */
-	public function rename_network_admin_sub_menus() {
-
-		if( is_super_admin() ) {
-
-			global $submenu;
-
-			// Rename submenu items
-			foreach( $submenu as $key=>&$menu_item ) {
-				if( $key == 'sites.php') {
-
-					foreach( $menu_item as &$submenu_item ) {
-						if( $submenu_item[0] == 'All Sites' ) {
-							$submenu_item[0] = 'All Sites';
-							break;
-						}
-					}
-					break;
-				}
-			}
-		}
-	}
-
-	/**
-	 * Remove sub menus
-	 */
-	public function remove_admin_sub_menus() {
-		
-		$user_id 	= get_current_user_id();
-		$user_type 	= get_user_meta( $user_id, 'cpd_role', true );
-
-		if( $user_type == 'participant' )
-		{
-			remove_submenu_page( 'users.php', 'users.php' );
-			remove_submenu_page( 'users.php', 'user-new.php' );
-			remove_submenu_page( 'tools.php', 'ms-delete-site.php' );
-			remove_submenu_page( 'options-general.php', 'options-discussion.php' );
-		}
-	}
-
-	/**
 	 * Remove network menus menus
 	 */
 	public function remove_network_admin_menus() {
 		
+		$menus = array(
+					'sites.php',
+					'users.php',
+					'themes.php',
+					'plugins.php',
+					'settings.php',
+					'update-core.php',
+				);
+
+		$network_admin_menus = apply_filters(
+			'mkdo_admin_remove_network_admin_menus_filter',
+			$menus
+		);
+
 		if( is_super_admin() ) {
-			remove_menu_page( 'sites.php' );
-			remove_menu_page( 'users.php' );
-			remove_menu_page( 'themes.php' );
-			remove_menu_page( 'plugins.php' );
-			remove_menu_page( 'settings.php' );
-			remove_menu_page( 'update-core.php' );
+			foreach( $network_admin_menus as $menu ) {
+				remove_menu_page( $menu );
+			}
 		}
 	}
 
@@ -278,7 +219,7 @@ class MKDO_Admin_MU_Menus extends MKDO_Class {
 
 		global $submenu;
 		$screen = get_current_screen();
-		//print_r($submenu);
+
 		if( strpos( $screen->base, '-network' ) ) {
 	
 			foreach( $submenu as $path=>&$submenu_item ) {

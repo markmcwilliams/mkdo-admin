@@ -49,25 +49,6 @@ class MKDO_Admin_Register_Scripts extends MKDO_Class {
 	 */
 	public function enqueue_scripts() {
 
-		// Scripts required for 'dashboard'
-		// wp_enqueue_script( 'dashboard' );
-
-		// if ( current_user_can( 'edit_theme_options' ) ) {
-		// 	wp_enqueue_script( 'customize-loader' );
-		// }
-		// if ( current_user_can( 'install_plugins' ) ) {
-		// 	wp_enqueue_script( 'plugin-install' );
-		// }
-		// if ( current_user_can( 'upload_files' ) ) {
-		// 	wp_enqueue_script( 'media-upload' );
-		// }
-		
-		// add_thickbox();
-
-		// if ( wp_is_mobile() ) {
-		// 	wp_enqueue_script( 'jquery-touch-punch' );
-		// }
-
 		// Scripts unique to the plugin
 		wp_enqueue_script( $this->instance, plugin_dir_url( __FILE__ ) . 'js/mkdo-admin.js', array( 'jquery' ), $this->version, TRUE );
 
