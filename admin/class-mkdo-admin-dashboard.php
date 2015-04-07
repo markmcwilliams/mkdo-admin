@@ -84,6 +84,17 @@ class MKDO_Admin_Dashboard extends MKDO_Class {
 						'page' 			=> 	'dashboard',
 						'context' 		=> 	'normal'
 					),
+					array (
+						'id' 			=> 	'network_dashboard_right_now',
+						'page' 			=> 	'dashboard-network',
+						'context' 		=> 	'side'
+					),
+					array (
+						'id' 			=> 	'dashboard_primary',
+						'page' 			=> 	'dashboard-network',
+						'context' 		=> 	'side'
+					),
+					
 				);
 
 		$dashboard_meta_items = apply_filters(
