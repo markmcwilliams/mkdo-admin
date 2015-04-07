@@ -79,6 +79,10 @@ class MKDO_Admin_Profile extends MKDO_Class {
 		/* check the current user is a super admin */
 		if ( ! current_user_can( 'manage_options', $user_id ) )
 			return false;
+
+		/* If the field has not been sent, exit */
+		if ( ! isset( $_POST[ 'mkdo_user' ] ) )
+			return false;
 			
 		/* get the current user information */
 		$mkdo_current_user = wp_get_current_user();
