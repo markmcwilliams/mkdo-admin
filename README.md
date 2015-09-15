@@ -1,7 +1,9 @@
-MKDO Admin
-==========
+Depreciated Plugin - MKDO Admin
+===============================
 
 ~Current Version:1.2~
+
+This Plugin is Depreciated, and will be refactored into code snippets and smaller easier to manage plugins. Please do not use.
 
 A plugin to tame the WordPress dashbaord. 
 
